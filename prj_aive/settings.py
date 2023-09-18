@@ -231,12 +231,12 @@ AIVE_DIR = {
         '/data/virus_result/',
     ],
     'jenon-DESK' : [
-        'D:/projectFiles/AIVE/fasta/',
-        'D:/projectFiles/AIVE/AF/',
-        'D:/projectFiles/AIVE/result/',
-        'C:/projects/AIVE/web_aive/apes_lib/',
-        'D:/projectFiles/AIVE/apes_result/',
-        'D:/projectFiles/AIVE/virus_result/',
+        'F:/projectFiles/AIVE/fasta/',
+        'F:/projectFiles/AIVE/AF/',
+        'F:/projectFiles/AIVE/result/',
+        'E:/python_work/AIVE/web_aive/apes_lib/',
+        'F:/projectFiles/AIVE/apes_result/',
+        'F:/projectFiles/AIVE/virus_result/',
     ],
     'jenon-MAC' : [
         '/Users/jenon-mac/projectFiles/AIVE/fasta/',
@@ -249,7 +249,7 @@ AIVE_DIR = {
 }
 
 #현재 AIVE 서버 환경
-#AIVE_ENV = 'REAL'
-AIVE_ENV = 'jenon-DESK'
+AIVE_ENV = 'REAL'
+#AIVE_ENV = 'jenon-DESK'
 #AIVE_ENV = 'jenon-MAC'
 
