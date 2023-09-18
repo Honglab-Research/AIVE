@@ -1,0 +1,169 @@
+
+	{% extends './layout/sub_layout.html' %}
+
+	{% block head%}
+		<script type="text/javascript">
+			
+		</script>
+	{% endblock %}
+
+
+	<!-- 컨텐츠 컨테이너 시작-->
+	{% block ContentContainer %}
+	<div class="container board">
+		<div class="subVisual board">
+			<div class="mv_content">
+				<div class="text_area">
+					<span>Prediction List</span>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 제목 시작 -->
+		{% block titleArea %}
+			<div class="title_area">
+				<span>Job List</span>
+			</div>
+		{% endblock %}
+		<!-- //제목 종료 -->
+		
+		<!-- 내용 시작 -->
+		{% block mainContent%}
+		<!-- Main -->
+		<form id="prdctnForm" name="prdctnForm" method="get">
+			{% csrf_token %}
+			{% if prdctnForm.errors%}
+			<div class="alert alert-danger">
+				{% for field in prdctnForm %}
+				<!--필드 오류-->
+				{% if field.errors %}
+				<div>
+					<strong>{{field.label }}</strong>
+					{{ field.errors}}
+				</div>
+				{% endif %}
+				{% endfor %}
+				<!-- 넌필드 오류 -->
+				{% for error in prdctnForm.non_field_errors %}
+				<div>
+					<strong>{{ error }}</strong>
+				</div>
+				{% endfor %}
+			</div>
+			{% endif %}
+	
+			<div class="board_area inquiry">
+				<ul class="grid-st1">
+					<li class="th">
+						<span class="num">No</span>
+						<span class="vl">Project name</span>
+						<span class="pred">Prediction</span>
+						<span class="pred">Target virus</span>
+						<span class="pred">Status</span>
+						<span class="link">Result link</span>
+					</li>
+					{% if demo_yn == 'Y' %}
+					<li class="td">
+						<span class="num">
+							DEMO
+						</span>
+						<span class="vl">BA.5_RBM Demo Prediction</span>
+						<span class="pred">
+							Monomor
+						</span>
+						<span class="pred">
+							SARS-CoV-2
+						</span>
+						<span class="pred">
+							Complete
+						</span>
+						<span class="link">
+								<a class="link" href="{% url 'aive:prdctn_result' 1 %}">Result Info</a>
+						</span>
+					</li>
+					{% endif %}
+					{% if prdctn_list %}
+						{% for prdctn in prdctn_list%}
+						<li class="td">
+							<span class="num">
+								{{forloop.counter}}
+							</span>
+							<span class="vl">{{ prdctn.prdctn_sj }}</span>
+							<span class="pred">
+								{% if prdctn.prdctn_protein_struct == 'MN' %}
+								Monomer
+								{% else %}
+								Multimor
+								{% endif %}
+							</span>
+							<span class="pred">
+								{% for virus in virus_list %}
+									{% if prdctn.trget_virus == virus.code %}
+										{{ virus.code_nm }}
+									{% endif %}
+								{% endfor %}
+							</span>
+							<span class="pred">
+								{% if prdctn.jobinfo__job_prgss_sttus == 'S' %}
+								Stanby
+								{% elif prdctn.jobinfo__job_prgss_sttus == 'P' %}
+								Process
+								{% else %}
+								Complete
+								{% endif %}
+							</span>
+							<span class="link">
+								{% if prdctn.jobinfo__job_prgss_sttus == 'C' %}
+									<a class="link" href="{% url 'aive:prdctn_result' prdctn.prdctn_info_seq %}">Result Info</a>
+								{% else %}
+									{{ prdctn.rem_time  }} hour left
+							</span>
+							{% endif %}
+						</li>
+						{% endfor%}
+					{% else %}
+						{% if demo_yn != 'Y' %}
+						<li class="empty td" style="text-align:center;">
+							<span style="width:100%;">No Data</span>
+						</li>
+						{% endif %}
+					{% endif %}
+				</ul>
+				<div class="paging_area">
+
+					<!-- 페이징처리 시작 -->
+
+					<!-- 시작페이지 -->
+					<a href="?page={{ prdctn_list.start_index }}"><<</a>
+					<!-- 이전페이지 -->
+					{% if prdctn_list.has_previous %}
+						<a href="?page={{ prdctn_list.previous_page_number }}"><</a>
+					{% else %}
+						<a tabindex="-1" aria-disabled="true" href="#"><</a>
+					{% endif %}
+					<!-- 페이지리스트 -->
+					{% for page_number in prdctn_list.paginator.page_range %}
+						{% if page_number == prdctn_list.number %}
+							<a class="active" href="?page={{ page_number }}">{{ page_number }}</a>
+						{% else %}
+							<a href="?page={{ page_number }}">{{ page_number }}</a>
+						{% endif %}
+					{% endfor %}
+
+					<!-- 다음페이지 -->
+					{% if prdctn_list.has_next %}
+						<a class="page-link" href="?page={{ prdctn_list.next_page_number }}">></a>
+					{% else %}
+						<a tabindex="-1" aria-disabled="true" href="#">></a>
+					{% endif %}
+					<!--끝페이지-->
+
+					<!-- 페이징처리 끝 -->
+					<a href="?page={{ prdctn_list.end_index }}">>></a>
+				</div>
+			</div>
+		{% endblock %}
+		<!-- //내용 종료 -->
+	</div>
+	{% endblock %}
+

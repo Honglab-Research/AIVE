@@ -1,0 +1,166 @@
+
+	{% extends './layout/sub_layout.html' %}
+
+	{% block head%}
+		<script type="text/javascript">
+			var getResult = function(){
+				//결과화면을 숨긴다.
+				$('#divResult').hide();
+
+				$.blockUI();
+				var params = $('#apesForm').serialize();
+
+				$.ajaxSetup({
+					headers: { "X-CSRFToken": '{{csrf_token}}' }
+				  });
+
+				$.ajax({
+					url:'/apes_view',
+					data:params,
+					type:'POST',
+					dataType:'json'
+				})
+				.done(function(result){
+					if (result != ''){
+						//각 이미지를 표시한다.
+						$('#imgLeftEigen').attr('src','/filedownload?file_name='+ result.left_eigen_chart_path + '&file_type=apes');
+						$('#imgLeftError').attr('src','/filedownload?file_name='+ result.left_predicted_chart_path + '&file_type=apes');
+						$('#imgRightEigen').attr('src','/filedownload?file_name='+ result.right_eigen_chart_path + '&file_type=apes');
+						$('#imgRightError').attr('src','/filedownload?file_name='+ result.right_predicted_chart_path + '&file_type=apes');
+
+						//결과화면을 보여준다.
+						$('#divResult').show()
+					}
+					
+				})
+				.fail(function(xhr, status, errorThrown) {
+					alert('결과조회 중 발생하였습니다.['+ status + ']\n시스템 담당자에게 연락하세요. ');
+				})
+				.always(function() {
+					$.unblockUI();
+				});
+			}
+		</script>
+	{% endblock %}
+
+
+	<!-- 컨텐츠 컨테이너 시작-->
+	{% block ContentContainer %}
+	<div class="container participation">
+		<div class="subVisual inquiry">
+			<div class="mv_content">
+				<div class="text_area">
+					<span>APES</span>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 제목 시작 -->
+		{% block titleArea %}
+			<div class="title_area">
+				<span>APES Result Info</span>
+			</div>
+		{% endblock %}
+		<!-- //제목 종료 -->
+		
+		
+		<!-- topmenu start -->
+		{% block mainContent%}
+		<div class="participation_box board_area">
+		<!-- Main -->
+			<div class="participate_area">
+				<div class="participate_area">
+					<ul class="input_list">
+						<li class="alive-stp stp1">
+							<span>Sequence</span>
+							<div class="input_area">
+								<textarea id="input_virus_seq_1" name="input_virus_seq_1" class="vt_inp"></textarea>
+							</div>
+						</li>
+						<li class="alive-stp">
+							<span>Number of mutation</span>
+							<div class="input_area">
+								<input type="text" id="nm" name="nm" placeholder="Input number of mutation(ex. 10000)" />
+							</div>
+						</li>
+						<li class="alive-stp">
+							<span>Selection score1</span>
+							<div class="input_area">
+								<input type="text" ssocre="score_1" name="score_1" placeholder="Input score(ex. -1.0 ~ 1.0)" />
+							</div>
+						</li>
+						<li class="alive-stp">
+							<span>Selection score2</span>
+							<div class="input_area">
+								<input type="text" id="score_2_1" name="score_2_1" placeholder="Input score(ex. 0 ~ 0.05)" />
+								&nbsp;&nbsp;&nbsp;~&nbsp;&nbsp;&nbsp;
+								<input type="text" id="score_2_2" name="score_2_2" placeholder="Input score(ex. 0 ~ 0.05)" />
+							</div>
+						</li>
+						<li class="alive-stp">
+							<span>Selection score3(Cluster)</span>
+							<div class="input_area">
+								<input type="checkbox" id="score_3_1" name="score_3[]" value="1"  checked="checked"/>
+								<label for="score_3_1">1</label>
+								<input type="checkbox" id="score_3_2" name="score_3[]" value="2" />
+								<label for="score_3_2">2</label>
+								<input type="checkbox" id="score_3_3" name="score_3[]" value="3" checked="checked"/>
+								<label for="score_3_3">3</label>
+								<input type="checkbox" id="score_3_4" name="score_3[]" value="4" />
+								<label for="score_3_4">4</label>
+								<input type="checkbox" id="score_3_5" name="score_3[]" value="5" />
+								<label for="score_3_5">5</label>
+								<input type="checkbox" id="score_3_6" name="score_3[]" value="6" />
+								<label for="score_3_6">6</label>
+							</div>
+						</li>
+					</ul>
+				</div>
+	
+				<div class="vt_btn_area">
+					<div class="input_area private">
+					</div>
+					<a id="btnResult" href="javascript:getResult();"  class="btn vt1">Results Information</a>
+				</div>
+					
+				<!-- info input -->
+				<div id="divResult" class="participate_area sars" style="display:none;" >
+					<ul class="input_list">
+						<li>
+							<span>Control21</span>
+							<div class="input_area">
+								<div>
+									<div class="ICn_area">
+										<img id="imgLeftEigen" src="/filedownload?file_name=left_aa_eigen_scroe.png&file_type=apes"/>
+									</div>
+									<div class="ICn_area">
+										<img id="imgLeftError" src="/filedownload?file_name=left_predicted_error.png&file_type=apes"/>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<span>Control22</span>
+							<div class="input_area">
+								<div>
+									<div class="ICn_area">
+										<img id="imgRightEigen" src="/filedownload?file_name=right_aa_eigen_scroe.png&file_type=apes"/>
+									</div>
+									<div class="ICn_area">
+										<img id="imgRightError" src="/filedownload?file_name=rigth_predicted_error.png&file_type=apes"/>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--//메인 콘텐츠 -->
+		{% endblock %}
+	</div>
+	{% endblock %}
+
+	
+
+

@@ -1,0 +1,69 @@
+@charset "utf-8";
+
+/* NotoSansKorean */
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 100;
+	src: local('Noto Sans Thin'), local('NotoSans-Thin'),
+	     url("../fonts/NotoSansKR/NotoSansKR-Thin-Hestia.eot") ,
+	     url("../fonts/NotoSansKR/NotoSansKR-Thin-Hestia.eot?#iefix") format('embedded-opentype'),
+	     url("../fonts/NotoSansKR/NotoSansKR-Thin-Hestia.woff") format('woff'),
+	     url("../fonts/NotoSansKR/NotoSansKR-Thin-Hestia.otf") format('opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Thin-Hesti.ttf") format('truetype');	
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 300;
+	src: local('Noto Sans Light'), local('NotoSans-Light'),
+		url("../fonts/NotoSansKR/NotoSansKR-Light-Hestia.eot") ,
+		url("../fonts/NotoSansKR/NotoSansKR-Light-Hestia.eot?#iefix") format('embedded-opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Light-Hestia.woff") format('woff'),
+		url("../fonts/NotoSansKR/NotoSansKR-Light-Hestia.otf") format('opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Light-Hestia.ttf") format('truetype');	
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Noto Sans Regular'), local('NotoSans-Regular'),
+		url("../fonts/NotoSansKR/NotoSansKR-Regular-Hestia.eot") ,
+		url("../fonts/NotoSansKR/NotoSansKR-Regular-Hestia.eot?#iefix") format('embedded-opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Regular-Hestia.woff") format('woff'),
+		url("../fonts/NotoSansKR/NotoSansKR-Regular-Hestia.otf") format('opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Regular-Hestia.ttf") format('truetype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 500;
+	src: local('Noto Sans Medium'), local('NotoSans-Medium'),
+		url("../fonts/NotoSansKR/NotoSansKR-Medium-Hestia.eot") ,
+		url("../fonts/NotoSansKR/NotoSansKR-Medium-Hestia.eot?#iefix") format('embedded-opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Medium-Hestia.woff") format('woff'),
+		url("../fonts/NotoSansKR/NotoSansKR-Medium-Hestia.otf") format('opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Medium-Hestia.ttf") format('truetype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 700;
+	src: local('Noto Sans Bold'), local('NotoSans-Bold'),
+		url("../fonts/NotoSansKR/NotoSansKR-Bold-Hestia.eot") ,
+		url("../fonts/NotoSansKR/NotoSansKR-Bold-Hestia.eot?#iefix") format('embedded-opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Bold-Hestia.woff") format('woff'),
+		url("../fonts/NotoSansKR/NotoSansKR-Bold-Hestia.otf") format('opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Bold-Hestia.ttf") format('truetype');
+}
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 900;
+	src: local('Noto Sans Black'), local('NotoSans-Black'),
+		url("../fonts/NotoSansKR/NotoSansKR-Black-Hestia.eot") ,
+		url("../fonts/NotoSansKR/NotoSansKR-Black-Hestia.eot?#iefix") format('embedded-opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Black-Hestia.woff") format('woff'),
+		url("../fonts/NotoSansKR/NotoSansKR-Black-Hestia.otf") format('opentype'),
+		url("../fonts/NotoSansKR/NotoSansKR-Black-Hestia.ttf") format('truetype');
+}

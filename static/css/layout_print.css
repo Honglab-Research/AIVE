@@ -1,0 +1,9 @@
+@media print{
+	.noprint{ 
+		display:none !important; 
+	}
+
+	.noprint_mt_0{ 
+		margin-top: 0px !important;
+	}
+}

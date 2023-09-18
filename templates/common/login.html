@@ -1,0 +1,105 @@
+
+	{% extends './layout/common_layout.html' %}
+
+	{% block head%}
+		<script type="text/javascript">
+			$(document).ready(function(){
+				//스타일 적용을 위한 class 제거
+				$('#renewal').removeClass();
+				var cookieid = getCookie('webAiveUser');
+				if(cookieid !=''){
+					$('#isSave').prop('checked', true);
+					$('#username').val(cookieid);
+				}
+			})
+
+			var chkSaveId = function(){
+				var expdate = new Date();
+				if ($('#isSave').is(':checked')){
+					expdate.setTime(expdate.getTime() + 1000 * 3600 * 24 * 30);
+					setCookie("webAiveUser", $("#username").val(), expdate);
+				}else{
+					expdate.setTime(expdate.getTime() - 1000 * 3600 * 24 * 30);
+					setCookie("webAiveUser", $("#username").val(), expdate);
+						
+				}
+			}
+		</script>
+	{% endblock %}
+
+	{% block titleArea %}
+	<div class="subVisual inquiry">
+		<div class="mv_content">
+			<div class="text_area">
+				<span>Login</span>
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+
+    <!-- topmenu start -->
+	{% block mainContent%}
+	<div class="container my-3">
+		<form method="post" action="{% url 'common:login' %}" onsubmit="return chkSaveId();" >
+			{% csrf_token %}
+			<div class="participate_area">
+				<div class="participate_area">
+					<ul class="input_list">
+						<li class="alive-stp">
+							<span>Name</span>
+							<div class="input_area">
+								<input type="text" name="username" id="username" class="vt_inp" required value="{{ form.username.value|default_if_none:'' }}" />
+								{% if form.errors.username%}
+									<span style="color:red;">{{ form.errors.username.0}}</span>
+								{% endif %}
+							</div>
+						</li>
+						<li class="alive-stp"> <!--나 추가-->
+							<span>Password</span>
+							<div class="input_area">
+								<input type="password" name="password" id="password" class="vt_inp" required minlength="4" maxlength="30" value="{{ form.password1.value|default_if_none:'' }}" />
+								{% if form.errors.password %}
+									<span style="color:red;">{{ form.errors.password.0}}</span>
+								{% endif %}
+							</div>
+							
+							<div class="id-chk clearfix">
+								<div class="squaredThree" style="display:none;">
+									<input type="checkbox" id="isSave" name="isSave" />
+									<label for="isSave">
+										<p>SAVE ID</p>
+									</label>
+								</div>
+								<div class="pw-find">
+									<a href="/common/password_reset">Forgot password?</a>
+								</div>
+			                </div>
+						</li>
+					</ul>
+					<div class="btn-area">
+						<button type="submit" class="btn login" style="margin-right: 20%" >Login</button>
+					</div>
+				</div>
+				{% if form.errors %}
+					<div class="alert alert-danger">
+						{% for field in form %}
+						<!-- 필드 오류 -->
+						{% if field.errors %}
+						<div>
+							<strong style="color:red;">{{ field.label }}</strong>
+							{{ field.errors }}
+						</div>
+						{% endif %}
+						{% endfor %}
+						<!-- 넌필드 오류 -->
+						{% for error in form.non_field_errors %}
+						<div>
+							<strong style="color:red;">{{ error }}</strong>
+						</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		</form>
+	</div>
+	{% endblock %}

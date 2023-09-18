@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        {% load static %}
+		<meta charset="utf-8" />
+		<title>AIVE</title>
+		<meta name="description" content="" />
+		<meta name="Keywords" content="AIVE" />
+		<meta http-equiv="Copyright" content="" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<meta name="robots" content="index,follow" />
+		<meta property="og:title" content="AIVE" />
+		<meta property="og:description" content="AIVE" />
+		<meta property="og:type" content="website" />
+		<meta property="og:image" content="{% static 'img/common/share_img.jpg' %}" />
+		<meta property="og:url" content="" />
+
+		<link
+			rel="shortcut icon"
+			href="{% static 'img/common/favicon.ico' %}"
+			type="image/x-icon"
+		/>
+		<link rel="icon" href="{% static 'img/common/favicon.ico' %}" type="image/x-icon" />
+
+		<link
+			rel="stylesheet"
+			type="text/css"
+            href="{% static 'css/font-awesome.min.css' %}"
+		/>
+		<!-- slick css -->
+		<link rel="stylesheet" type="text/css" href="{% static 'css/slick.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static 'css/slick-theme.css' %}" />
+
+		<link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static 'css/layout.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/layout_print.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/renewal.css' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+		
+        <script>
+            if( (navigator.userAgent).indexOf("Chrome") > -1   //Chrome, 안드로이드 폰, Edge가 해당됩니다.
+            || (navigator.userAgent).indexOf("rv:") > -1   //익스플로러만 해당됩니다
+            ) {
+                document.write('<link rel="stylesheet" type="text/css" href="{% static 'css/common.css' %}" />');
+            }else{
+                document.write('<link rel="stylesheet" type="text/css" href="{% static 'css/common apple.css' %}" />');
+            }
+        </script>
+        <script src="{% static 'js/common/jquery.min.js' %}"></script>
+        <script src="{% static 'js/common/jquery-migrate-1.2.1.min.js' %}"></script>
+        <script src="{% static 'js/common/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'js/common/jquery.blockUI.js' %}"></script>
+		<script src="{% static 'js/common/modernizr-3.7.1.min.js' %}"></script>
+
+        <!-- 홈페이지 정보 헤드 -->
+        <script src="{% static 'js/common/FileSaver.min.js' %}"></script>
+        <script src="{% static 'js/common/commonUtils.js' %}"></script>
+        <script src="{% static 'js/common/commonMath.js' %}"></script>
+        
+
+
+        <!-- slick js -->
+        <script src="{% static 'js/common/slick.js' %}"></script>
+
+        <style>
+            input:valid:required {
+                border-color: green;
+            }
+
+            input:invalid {
+                border-color: red;
+            }
+
+            input:invalid:required {
+                //background-image: linear-gradient(to right, #FF0000, #000000);
+                border-color: red;
+                background-color: #dcdcdc;
+                }
+        </style>
+
+
+        <script>
+            // hamberger menu
+            $(".menu-btn").click(function () {
+                $(".line").toggleClass("animate");
+            });
+            // hamberger menu
+            // navigation
+            $(document).ready(function () {
+                $(".gnbClose, .gnbOpen").on("click", function () {
+                    $(".gnb").toggleClass("active");
+                    $(".gnbOpen").toggleClass("gnbClose");
+                    $("html, body, .wrap").toggleClass("open");
+                    $("html, body, .wrap").off("scroll touchmove mousewheel");
+                });
+
+                //도움말 표시
+                $(".help_pop").mouseover(function () {
+                    var popupEl = $('#helpPopup').find('.pop_text');
+                    var locationStdEl = $(this).parents();
+                    var popupHtml = $(this).next().html();
+
+                    popupEl.html(popupHtml);
+                    popupEl.css('top',locationStdEl.offset().top + popupEl.outerHeight());
+                    popupEl.css('max-width','1180px');
+
+                    popupEl.addClass("show");
+                });
+    
+                $(".help_pop").mouseout(function () {
+                    $(".pop_text.show").removeClass("show");
+                });
+            });
+
+            // accordion menu
+            $(document).ready(function () {
+                $("#accordion a").click(function () {
+                    var link = $(this);
+                    var closest_ul = link.closest("ul");
+                    var parallel_active_links = closest_ul.find(".active");
+                    var closest_li = link.closest("li");
+                    var link_status = closest_li.hasClass("active");
+                    var count = 0;
+
+                    closest_ul.find("ul").slideUp(function () {
+                        if (++count == closest_ul.find("ul").length)
+                            parallel_active_links.removeClass("active");
+                    });
+
+                    if (!link_status) {
+                        closest_li.children("ul").slideDown();
+                        closest_li.addClass("active");
+                    }
+                });
+            });
+            $(".ml_list").slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                infinite: true,
+                dots: false,
+                arrows: true,
+            });
+        </script>
+        
+
+        {% block head%}
+        {% endblock %}
+	</head>
+
+    <body id="renewal" class="prdctn">
+        <div class="wrap main">
+            <!-- 상단 메뉴 시작-->
+            <header class="header main">
+                <div class="noprint header_wrap">
+                    <a class="logo" href="/">
+                        <img src="{% static 'img/common/logo.png' %}" alt="AIVE" style="height:50px;" />
+                    </a>
+
+                    <div class="ab_right">
+                        <div class="menuBtn">
+                            <a class="gnbOpen menu-btn">
+                                <span class="line first"></span>
+                                <span class="line second"></span>
+                                <span class="line hid"></span>
+                                <span class="line third"></span>
+                            </a>
+                        </div>
+                        <div class="gnb">
+                            
+                            <nav class="menu">
+                                <div style="width:190px;height:30px;float: right;">
+                                    {% if user.is_authenticated %}
+                                        <div style="font-size: 13px; float:left;   position: relative; top:10px; margin-left: 20px;" >
+                                            <a href="/common/logout"><span>{{ user.username }} Logout</span></a>
+                                        </div>
+                                    {% else %}
+                                        <div style="font-size: 13px; float:left;   position: relative; top:10px; margin-left: 20px;" >
+                                            <a href="/common/login"><span>Login</span></a>
+                                        </div>
+                                        <div style="font-size: 13px; float:left;   position: relative; top:10px;margin-left: 20px;" >
+                                            <a href="/common/signup">Sign Up</a>  
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div style="font-size: 13px; float:left;   position: relative; top:10px;margin-left: 20px;" >
+                                        <a href="/common/sitemap">Sitemap</a>  
+                                    </div>
+                                </div>
+                                <div class="nav-category" id="accordion">
+                                    <ul class="accordion gnbBox">
+                                        <li>
+                                            <a href="/"><span>Home</span></a>
+                                        </li>
+                                        <li class="subNav" style="cursor:pointer;">
+                                            <a><span>Prediction</span></a>
+                                            <ul class="submenu">
+                                                <li>
+                                                    <a href="/prdctn_regist_server">Local</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/prdctn_regist_colab">Colab</a>
+                                                </li>
+                                                <!--
+                                                    <li>
+                                                        <a href="/apes_view">APES</a>
+                                                    </li>
+                                                -->
+                                            </ul>
+                                        </li>
+                                        <li style="cursor:pointer;">
+                                            <a><span>Report</span></a>
+                                            <ul class="submenu" >
+                                                <li>
+                                                    <a href="/prdctn_list">List</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/aive_result_viewer">Result viewer</a>
+                                                </li>
+                                                <!--
+                                                    <li>
+                                                        <a href="/apes_view">APES</a>
+                                                    </li>
+                                                -->
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="/aive_about"><span>About</span></a>
+                                        </li>
+                                        <li>
+                                            <a href="/aive_tutorial"><span>Tutorial</span></a>
+                                        </li> 
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- //상단 메뉴 종료-->
+
+            <!-- 본문 컨텐츠 시작 -->
+            {% block container %}
+            
+            {% endblock %}  
+            <!-- //본문 컨텐츠 종류-->
+        </div>
+        <!-- 푸터 시작-->
+        <div id="footer" class="footer noprint">
+            <footer>
+                <a href="" class="logo_client">
+                    <img src="/static/img/common/logo_footer.png" alt="AIVE" />
+                </a>
+                <div class="text_area">
+                    <!-- footer link area -->
+                    <!-- 
+                    <div class="footer_link">
+                        <a href="#modal01" class="terms termsPopup1"
+                            >개인정보취급방침</a
+                        >
+                        <a href="#modal02" class="terms termsPopup2"
+                            >이메일무단수집거부</a
+                        >
+                        <a href="sitemap.html" class="terms">사이트맵</a>
+                    </div>
+                    -->
+                    <dd>
+                        <dl>
+                            Catholic University of Korea, College of Medicine, 222 Banpodae-ro, Seocho-gu, Seoul 06591, Republic of Korea
+                        </dl>
+                    </dd>
+                </div>
+                <!-- terms modal -->
+                <div data-ml-modal id="modal01">
+                    <a href="#!" class="modal-overlay"></a>
+                    <div class="modal-dialog modal-dialog-lg">
+                        <a href="#!" class="modal-close">&times;</a>
+                        <h3>개인정보취급방침</h3>
+                        <div class="modal-content terms01">
+                            <div class="section">
+                                <p></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div data-ml-modal id="modal02">
+                    <a href="#!" class="modal-overlay"></a>
+                    <div class="modal-dialog modal-dialog-lg">
+                        <a href="#!" class="modal-close">&times;</a>
+                        <h3>이메일무단수집거부</h3>
+                        <div class="modal-content terms01">
+                            <div class="section">
+                                <p></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- //푸터 종료-->
+
+        
+    </body>
+
+
+   
+</html>

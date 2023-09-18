@@ -1,0 +1,23 @@
+{% extends './base_layout.html' %}
+
+
+
+            <!-- main contents -->
+            {% block container %}
+            <div class="container main">
+                <!-- 메인배너 시작-->
+                {% block mainBanner%}
+                {% endblock %}
+                
+                <!-- //메인배너 종료-->
+
+                <!-- 본문 내용 시작-->
+                {% block mainContent%}
+                {% endblock %}
+                <!-- //본문 내용 종료-->
+               
+            </div>
+            {% endblock %}
+        
+
+        

@@ -1,0 +1,91 @@
+<!-- info modal -->
+<div data-ml-modal id="virusAaSeq">
+    <a href="#!" class="modal-overlay"></a>
+    <div class="modal-dialog modal-dialog-lg">
+        <a href="#!" class="modal-close">&times;</a>
+        <h3>Mutated Virus AA Seq</h3>
+        <div class="modal-content" style="height:auto !important;">
+            <div class="input_area">
+                <div class="alignment-area">
+                    <div id="divMDVirusAaSeq" class="am-list-row">
+                        {% for aa in prdctn_info.input_virus_seq_1 %}
+                        <span class="row">
+                            <span class="num">{{forloop.counter}}</span>
+                            <span class="txt color color{{aa}}">{{aa}}</span>
+                        </span>
+                        {% endfor%}
+                    </div>
+                </div>
+
+                <!-- 범례 -->
+                <div class="legend-box">
+                    <table class="tbl-list tbl-legend">
+                        <colgroup>
+                            <col style="width: 60%" />
+                            <col />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Amino acids with electriccally charged side
+                                    chain _Negative
+                                </th>
+                                <td>
+                                    <span class="color color01">R</span>
+                                    <span class="color color02">H</span>
+                                    <span class="color color03">K</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Amino acids with electriccally charged side
+                                    chain _positive
+                                </th>
+                                <td>
+                                    <span class="color color04">D</span>
+                                    <span class="color color05">E</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Amino acids with Polar uncharged side chain
+                                </th>
+                                <td>
+                                    <span class="color color06">S</span>
+                                    <span class="color color07">T</span>
+                                    <span class="color color08">N</span>
+                                    <span class="color color09">Q</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Special cases</th>
+                                <td>
+                                    <span class="color color10">C</span>
+                                    <span class="color color11">G</span>
+                                    <span class="color color12">P</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Amino acids with hydrophobic side chain
+                                </th>
+                                <td>
+                                    <span class="color color13">A</span>
+                                    <span class="color color14">V</span>
+                                    <span class="color color15">I</span>
+                                    <span class="color color16">L</span>
+                                    <span class="color color17">M</span>
+                                    <span class="color color18">F</span>
+                                    <span class="color color19">Y</span>
+                                    <span class="color color20">W</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 범례 끝-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- info modal 끝-->

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title> </title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="format-detection" content="telephone=no">
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/contents.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/theme.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/ui-common.css' %}">
+    <style type="text/css">
+        .ui-datepicker-week-end {color:red;}
+        .ui-datepicker-week-end .ui-state-default {color:red;}
+        .ui-datepicker-year{
+            all:unset ;
+            width:25% !important;
+            font-size: 1em;
+            margin: 1px 0;
+            appearance: none;
+            background: #fff url(/images/profHong/common/select-arr.svg) no-repeat 95% 50%;
+            background-size: 7px 4px;
+            border: 1px solid #dfe1e5;
+            padding: 5px 1.6em 5px 0.5em;
+            border-radius: 0px;
+            vertical-align: middle;
+            overflow: visible !important;
+            -webkit-writing-mode: horizontal-tb !important;
+            text-rendering: auto;
+            word-spacing: normal;
+            text-transform: none;
+            text-indent: 0px;
+            text-shadow: none;
+            display: inline-block;
+            text-align: start;
+            align-items: center;
+            white-space: pre;
+            -webkit-rtl-ordering: logical;
+            cursor: default;
+            font: 400 13.3333px Arial;
+        }
+        .ui-datepicker-month{all:unset ;
+            font-size: 1em;
+            width:25% !important;
+            margin: 1px 0;
+            appearance: none;
+            background: #fff url(/images/profHong/common/select-arr.svg) no-repeat 95% 50%;
+            background-size: 7px 4px;
+            border: 1px solid #dfe1e5;
+            padding: 5px 1.6em 5px 0.5em;
+            border-radius: 0px;
+            vertical-align: middle;
+            overflow: visible !important;
+            -webkit-writing-mode: horizontal-tb !important;
+            text-rendering: auto;
+            word-spacing: normal;
+            text-transform: none;
+            text-indent: 0px;
+            text-shadow: none;
+            display: inline-block;
+            text-align: start;
+            align-items: center;
+            white-space: pre;
+            -webkit-rtl-ordering: logical;
+            cursor: default;
+            font: 400 13.3333px Arial;
+        }
+    </style>
+    <script href="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+    <script href="{% static 'js/jquery-migrate-1.2.1.min.js' %}"></script>
+    <script href="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script href="{% static 'js/browser.min.js' %}"></script>
+    <script href="{% static 'js/breakpoints.min.js' %}"></script>
+    <script href="{% static 'js/util.js' %}"></script>
+    <script href="{% static 'js/main.js' %}"></script>
+
+
+    <script type="text/javascript">
+        var _fnPageMove = function(gbn, seq, bbsId, url, lectureYear, lectureTerm){
+            if (gbn == 'bbs'){
+                $('#_bbsId').val(bbsId);
+                $('#topMemnFrm').attr('action','/cop/bbs/selectBoardList.do');
+            } else if (gbn == 'homepage'){
+                $('#_bbsId').val(bbsId);
+                $('#topMemnFrm').attr('action','/' + url);
+            } else if (gbn == 'lecture'){
+                $('#_bbsId').val(bbsId);
+                $('#_lectureYear').val(lectureYear);
+                $('#_lectureTerm').val(lectureTerm);
+                $('#topMemnFrm').attr('action','/cop/bbs/selectBoardList.do');
+            }
+
+            $('#topMemnFrm').attr('method','post');
+            $('#topMemnFrm').submit();
+        }
+
+    </script>
+
+    <!-- topmenu start -->
+</head>
+    <body class="">
+    <form id="topMemnFrm" name="topMemnFrm" action="http://localhost:8080/aive/main.do#LINK" method="post" style="margin: 0px !important;">
+        <input type="hidden" id="_bbsId" name="bbsId">
+        <input type="hidden" id="_lectureYear" name="lectureYear">
+        <input type="hidden" id="_lectureTerm" name="lectureTerm">
+    </form>
+        <!-- 홈페이지 정보 헤드 -->
+        <script href="{% static 'js/EgovBBSMng.js' %}"></script>
+        <script href="{% static 'js/FileSaver.min.js' %}"></script>
+        <script href="{% static 'js/commonUtils.js' %}"></script>
+
+		<script type="text/javascript">
+			var clickAA;
+			$(document).ready(function(){
+				$('#btnShow').click(() => {
+					$('#divAaList').children().remove();
+
+					let tmpText = $('#txtInput').val();
+					for(let i=0;i<tmpText.length;i++){
+						$('#divAaList').append(
+								$('<span class="row">').append(
+											$('<span class="num">').text(i+1)
+										)
+										.append(
+											$('<span class="txt color">').text(tmpText[i]).on('click',(evt) => {
+												aaClick(evt);
+												})
+										)
+								);
+
+
+					}
+				});
+
+				$('#btnSave').click(() => {
+					CommonUtils.downloadText($.trim($('#txtOutput').val()),'AA_DATA','fasta');
+				});
+
+				//아미노산 버튼 토글
+				$('.txt').click(function(clickCheck){
+					if(clickCheck){
+						$(this).children('.am-list-col').css('display','block');
+						$('.txt').removeClass('color');
+						$(this).toggleClass('color');
+					}else{
+						$('.am-list-col').css('display','none');
+						$('.txt').removeClass('color');
+					}
+				});
+
+			});
+
+			//aa click 시 aa 목록 표시
+			var aaClick = function(evt){
+				clickAA = evt.target;
+				$('#divSelAa').css('top',$(clickAA).offset().top + 24.8);
+				$('#divSelAa').css('left',$(clickAA).offset().left);
+
+				$('#divSelAa').show();
+			}
+
+			//aa 목록에서 aa click시 색을 반영하고 목록 숨기기
+			var clickAa = function(obj, idx){
+
+				let outputAa = '';
+
+				$(clickAA).addClass('color'+idx);
+
+				$(clickAA).text($(obj).text());
+
+				$('#divSelAa').hide();
+
+				$('.txt.color').each((idx,obj) => {
+					outputAa += $(obj).text();
+				});
+
+				//output에 저장
+				$('#txtOutput').text(outputAa);
+			}
+		</script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/profHong.css' %}">
+
+        <div id="u-skip" style="display: none;">
+            <a class="go-content" href="/aive/#body" onclick="document.getElementById(&#39;contents&#39;).tabIndex=-1;document.getElementById(&#39;contents&#39;).focus();return false;">
+                <span>본문 바로가기</span>
+            </a>
+        </div>
+<!-- 상단 메뉴 -->
+
+
+	<!-- Header -->
+	<header id="header">
+	</header>
+
+	<!-- Nav -->
+
+<!-- //상단 메뉴 -->
+
+<!-- 메인 콘텐츠 -->
+
+		<!-- Heading -->
+		<div id="heading">
+			<h1>AIVE</h1>
+		</div>
+
+		<!-- Main -->
+		<section id="main" class="wrapper">
+			<div class="inner">
+				<div class="content">
+					<div style="text-align: center;">
+						<h2>AIVE</h2>
+					</div>
+
+					<!-- alive -->
+					<div class="alive-wrap">
+						<!-- step 01 -->
+						<div class="alive-stp stp1">
+							<label class="tit" for="ipt1-1">Input</label>
+							<textarea id="txtInput" name="txtInput" style="height:150px" placeholder=".fasta 파일 형식 넣어 주기 "></textarea>
+						</div>
+						<div class="btn-group-box">
+							<br>
+							<a id="btnShow" href="javascript:void(0);" class="button primary">Show Alignment</a>
+						</div>
+						<!-- //step 01 -->
+						<!-- step 02 -->
+						<div class="alive-stp stp2">
+						<span class="tit">Alignment</span>
+						<div class="alignment-area" style="position: relative;">
+							<div id="divAaList" class="am-list-row">
+
+							</div>
+						</div>
+							<!-- 범례 -->
+							<div class="legend-box">
+								<table class="tbl-list tbl-legend">
+									<caption>범례</caption>
+									<colgroup>
+										<col style="width:60%;">
+										<col>
+									</colgroup>
+									<tbody>
+										<tr>
+											<th scope="row">Amino acids with electriccally charged side chain _Positive</th>
+											<td>
+												<span class="color color01">R</span>
+												<span class="color color02">H</span>
+												<span class="color color03">K</span>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">Amino acids with electriccally charged side chain _Negative</th>
+											<td>
+												<span class="color color04">D</span>
+												<span class="color color05">E</span>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">Amino acids with Polar uncharged side chain</th>
+											<td>
+												<span class="color color06">S</span>
+												<span class="color color07">T</span>
+												<span class="color color08">N</span>
+												<span class="color color09">Q</span>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">Special cases</th>
+											<td>
+												<span class="color color10">C</span>
+												<span class="color color11">G</span>
+												<span class="color color12">P</span>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">Amino acids with hydrophobic side chain</th>
+											<td>
+												<span class="color color13">A</span>
+												<span class="color color14">V</span>
+												<span class="color color15">I</span>
+												<span class="color color16">L</span>
+												<span class="color color17">M</span>
+												<span class="color color18">F</span>
+												<span class="color color19">Y</span>
+												<span class="color color20">W</span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<!-- //범례 -->
+						</div>
+						<!-- //step 02 -->
+						<!-- step 03 -->
+						<div class="alive-stp stp3">
+							<label class="tit" for="ipt1-2">Output</label>
+							<textarea id="txtOutput" name="txtOutput" style="height:150px" placeholder=".fasta 파일 형식 넣어 주기 "></textarea>
+						</div>
+						<!-- //step 03 -->
+					</div>
+					<!-- //alive -->
+					<div class="btn-group-box">
+						<a id="btnSave" href="javascript:void(0);" class="button primary">Save</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- 아미노산 -->
+		<div id="divSelAa" class="am-list-col" style="display:none; width: 24.8px;">
+			<span class="color color01" onclick="clickAa(this, &#39;01&#39;);">R</span>
+			<span class="color color02" onclick="clickAa(this, &#39;02&#39;);">H</span>
+			<span class="color color03" onclick="clickAa(this, &#39;03&#39;);">K</span>
+			<span class="color color04" onclick="clickAa(this, &#39;04&#39;);">D</span>
+			<span class="color color05" onclick="clickAa(this, &#39;05&#39;);">E</span>
+			<span class="color color06" onclick="clickAa(this, &#39;06&#39;);">S</span>
+			<span class="color color07" onclick="clickAa(this, &#39;07&#39;);">T</span>
+			<span class="color color08" onclick="clickAa(this, &#39;08&#39;);">N</span>
+			<span class="color color09" onclick="clickAa(this, &#39;09&#39;);">Q</span>
+			<span class="color color10" onclick="clickAa(this, &#39;10&#39;);">C</span>
+			<span class="color color11" onclick="clickAa(this, &#39;11&#39;);">G</span>
+			<span class="color color12" onclick="clickAa(this, &#39;12&#39;);">P</span>
+			<span class="color color13" onclick="clickAa(this, &#39;13&#39;);">A</span>
+			<span class="color color14" onclick="clickAa(this, &#39;14&#39;);">V</span>
+			<span class="color color15" onclick="clickAa(this, &#39;15&#39;);">I</span>
+			<span class="color color16" onclick="clickAa(this, &#39;16&#39;);">L</span>
+			<span class="color color17" onclick="clickAa(this, &#39;17&#39;);">M</span>
+			<span class="color color18" onclick="clickAa(this, &#39;18&#39;);">F</span>
+			<span class="color color19" onclick="clickAa(this, &#39;19&#39;);">Y</span>
+			<span class="color color20" onclick="clickAa(this, &#39;20&#39;);">W</span>
+		</div>
+		<!-- //아미노산 -->
+
+<!-- //메인 콘텐츠 -->
+
+    <!-- 푸터 -->
+
+	<!-- Footer -->
+	<footer id="footer" style="padding: 0px;">
+		<div class="inner">
+			<div class="copyright">
+				© Copyright Hong Lab. Catholic University of Korea, College of Medicine. All Rights Reserved.
+			</div>
+		</div>
+	</footer>
+    <!-- //푸터 -->
+
+    </body>
+</html>

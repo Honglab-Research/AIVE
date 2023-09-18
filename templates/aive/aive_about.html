@@ -1,0 +1,221 @@
+
+	{% extends './layout/sub_layout.html' %}
+
+	{% block head%}
+		<style>
+			/* pricing table */
+			.pricing-table{padding: 0px; margin: 0px; margin-top: 10px;}
+				.pricing-table td{padding: 0px; border-left: 1px solid transparent;}
+				.pricing-table .pricing-table-list td{padding: 10px 8px; font-weight: 500; text-align: center; font-size: 12px; background: #F9F9F9;}
+					.pricing-table .pricing-table-list .glyphicon-ok{color: #68AF27;}
+					.pricing-table .pricing-table-list .glyphicon-remove{color: #C22439;}
+					.pricing-table .pricing-table-list td:first-child{font-weight: 600; text-align: left; border-left: 0px; font-size: 11px; color: #333; text-transform: uppercase;}
+					
+					.pricing-table .pricing-table-list:nth-child(2n) td{background: #F2F2F2;}
+					
+				.pricing-table .pricing-table-text h2{font-size: 35px; font-weight: 300; line-height: 33px; margin: 0px; padding: 0px; text-align: center; color: #009AD7;}
+				.pricing-table .pricing-table-text p{font-size: 12px; font-weight: 400; text-align: center; color: #666; margin-top: 10px;}
+				
+				.pricing-table .pricing-table-item{color: #FFF;}
+					.pricing-table .pricing-table-item .pricing-table-item-head{padding: 10px 5px; text-align: center; background: #009AD7;}
+						.pricing-table .pricing-table-item .pricing-table-item-head p{font-size: 17px; font-weight: 600; line-height: 21px; text-transform: uppercase; margin-bottom: 0px;}
+						.pricing-table .pricing-table-item .pricing-table-item-head span{font-size: 11px; font-weight: 400;}
+						
+					.pricing-table .pricing-table-item .pricing-table-item-price{padding: 15px 10px; text-align: center; background: #FFF; color: #009AD7;}
+						.pricing-table .pricing-table-item .pricing-table-item-price p{font-size: 41px; font-weight: 400; line-height: 36px; margin-bottom: 0px;}
+							.pricing-table .pricing-table-item .pricing-table-item-price p span{font-size: 12px; font-weight: 300;}
+						.pricing-table .pricing-table-item .pricing-table-item-price > span{font-size: 12px; font-weight: 400; color: #009AD7}
+						
+					.pricing-table .pricing-table-item .pricing-table-item-purchase{padding: 10px 5px; background: #FFF;}
+						.pricing-table .pricing-table-item .pricing-table-item-purchase .btn{text-transform: uppercase; margin-bottom: 0px;}
+			/* eof pricing table */    
+		</style>
+		<script type="text/javascript">
+			const popCitation = function(url){
+				window.open(url);
+			}
+		</script>
+	{% endblock %}
+
+
+	<!-- 컨텐츠 컨테이너 시작-->
+	{% block ContentContainer %}
+	<div class="container participation">
+		<div class="subVisual inquiry">
+			<div class="mv_content">
+				<div class="text_area">
+					<span>About</span>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 제목 시작 -->
+		{% block titleArea %}
+			<div class="title_area">
+				<span>About</span>
+			</div>
+		{% endblock %}
+		<!-- //제목 종료 -->
+		
+		
+		<!-- topmenu start -->
+		{% block mainContent%}
+		<div class="board_area" >
+			<h2 style="Displays:inline-block;font-size:36px;line-height:1;letter-spacing:-0.5px;color:#333"><strong style="fint-weight:700;color:#fc6719">C</strong>itation</h2>
+			<!--<div class="tutorial_step">
+				Citation
+			</div>-->
+			<div class="tutorial_expl02" style="background-color:#fbf7f1;padding:20px 20px 20px">
+				<ol>
+					<li>
+						Jumper, J., Evans, R., Pritzel, A. et al. Highly accurate protein structure prediction with AlphaFold. Nature 596, 583–589 (2021). 
+						<br/>
+						(<a href="javascript:popCitation('https://doi.org/10.1038/s41586-021-03819-2');">https://doi.org/10.1038/s41586-021-03819-2</a>)<p></p>
+					</li>
+					<li style="padding-top:20px">
+						Evans, R. et al. Protein complex prediction with AlphaFold-Multimer. Preprint at bioRxiv (2021). 
+						<br/>
+						(<a href="javascript:popCitation('https://doi.org/10.1101/2021.10.04.463034');">https://doi.org/10.1101/2021.10.04.463034</a>)<p></p>
+					</li>
+					<li style="padding-top:20px">
+						Bryant, P., Pozzati, G. & Elofsson, A. Improved prediction of protein-protein interactions using AlphaFold2. Nat Commun 13, 1265 (2022). 
+						<br/>
+						(<a href="javascript:popCitation('https://doi.org/10.1038/s41467-022-28865-w');">https://doi.org/10.1038/s41467-022-28865-w</a>)<p></p>
+					</li>
+					<li style="padding-top:20px">
+						Jiyao Wang, Philippe Youkharibache, Dachuan Zhang, Christopher J Lanczycki, Renata C Geer, Thomas Madej, Lon Phan, Minghong Ward, Shennan Lu, Gabriele H Marchler, Yanli Wang, Stephen H Bryant, Lewis Y Geer, Aron Marchler-Bauer, iCn3D, a web-based 3D viewer for sharing 1D/2D/3D representations of biomolecular structures, Bioinformatics, Volume 36, Issue 1, 1 January 2020, Pages 131–135, 
+						<br/>
+						(<a href="javascript:popCitation('https://doi.org/10.1093/bioinformatics/btz502');">https://doi.org/10.1093/bioinformatics/btz502</a>)<p></p>
+					</li>
+					<li style="padding-top:20px">
+						Wang J, Youkharibache P, Marchler-Bauer A, Lanczycki C, Zhang D, Lu S, Madej T, Marchler GH, Cheng T, Chong LC, Zhao S, Yang K, Lin J, Cheng Z, Dunn R, Malkaram SA, Tai C-H, Enoma D, Busby B, Johnson NL, Tabaro F, Song G and Ge Y (2022) iCn3D: From Web-Based 3D Viewer to Structural Analysis Tool in Batch Mode. Front. Mol. Biosci. 9:831740. 
+						<br/>
+						(<a href="javascript:popCitation('https://doi.org/10.3389/fmolb.2022.831740');">https://doi.org/10.3389/fmolb.2022.831740</a>)
+					</li>
+				</ol>
+		   </div>
+
+		   <h2 style="Displays:inline-block;font-size:36px;line-height:1;letter-spacing:-0.5px;color:#333;padding-top:30px"><strong style="fint-weight:700;color:#fc6719">L</strong>icense and Disclaimer</h2>
+		   <!--<div class="tutorial_step">
+				License and Disclaimer
+		    </div>-->
+			<div class="tutorial_expl02" style="background-color:#fbf7f1;padding:20px 20px 20px">
+				<ol>
+					<li>
+						AlphaFold2 is available under the Apache License, Version 2.0.<p></p>
+					</li>
+					<li style="padding-top:20px">
+						FoldDock is available under the Apache License, Version 2.0.<p></p>
+					</li>
+					<li style="padding-top:20px">
+						The AlphaFold parameters are made available under the terms of the Creative Commons Attribution 4.0 International (CC BY 4.0) license. You can find the details at:
+						<a href="javascript:popCitation('https://creativecommons.org/licenses/by-sa/4.0/');">Creative Commons Attribution-ShareAlike 4.0 International License.</a><p></p>
+					</li>
+					<li style="padding-top:20px"> 
+						<a href="javascript:popCitation('https://bfd.mmseqs.com/');">BFD</a> (unmodified), by Steinegger M. and Söding J., available under a
+						<a href="javascript:popCitation('https://creativecommons.org/licenses/by-sa/4.0/');">Creative Commons Attribution-ShareAlike 4.0 International License.</a><p></p>
+					</li>
+					<li style="padding-top:20px">
+						<a href="javascript:popCitation('https://bfd.mmseqs.com/');">BFD</a> (modified), by Steinegger M. and Söding J., modified by DeepMind, available under a <a href="javascript:popCitation('https://creativecommons.org/licenses/by-sa/4.0/');">Creative Commons Attribution-ShareAlike 4.0 International License.</a>
+						  See the Methods section of the <a href="javascript:popCitation('https://www.nature.com/articles/s41586-021-03828-1');">AlphaFold proteome paper</a> for details.
+					</li>
+					<li style="padding-top:20px">
+						<a href="javascript:popCitation('https://wwwuser.gwdg.de/~compbiol/uniclust/2021_03/');">Uniref30: v2021_03</a> (unmodified), by Mirdita M. et al., available under the <a href="javascript:popCitation('https://creativecommons.org/licenses/by-sa/4.0/');">Creative Commons Attribution-ShareAlike 4.0 International License.</a><p></p>
+					</li>
+					<li style="padding-top:20px">
+						<a href="javascript:popCitation('http://ftp.ebi.ac.uk/pub/databases/metagenomics/peptide_database/2022_05/README.txt');">MGnify: v2022_05</a> (unmodified), by Mitchell AL et al., available free of all copyright restrictions and made fully and freely available for both non-commercial and commercial use under <a href="javascript:popCitation('https://creativecommons.org/publicdomain/zero/1.0/');">CC0 1.0 Universal (CC0 1.0) Public Domain Dedication.</a>
+					</li>
+				</ol>
+			</div>
+			<br/>
+			<h2 style="Displays:inline-block;font-size:25px;line-height:1;letter-spacing:-0.5px;color:#333;padding-top:10px"><strong style="fint-weight:700;color:#fc6719">B</strong>rowser compatibility </h2>
+			<div class="col-xs-12 col-md-12 tutorial_expl02" style="background-color:#fbf7f1;padding:10px 20px 10px">                            
+				<table class="pricing-table" width="100%">
+					<tbody>
+						<tr>
+							<td width="10%" class="pricing-table-text">
+							</td>
+							<td width="30%">
+								<div class="pricing-table-item">
+									<div class="pricing-table-item-head"><p>Linux</p></div>
+								</div>
+							</td>
+							<td width="30%">
+								<div class="pricing-table-item">
+									<div class="pricing-table-item-head"><p>MacOS</p></div>
+								</div>
+							</td>
+							<td width="30%">
+								<div class="pricing-table-item">
+									<div class="pricing-table-item-head"><p>Windows</p></div>
+								</div>
+							</td>
+						</tr>
+						<tr class="pricing-table-list">
+							<td>Version</td>
+							<td>CentOS 7</td>
+							<td>MacOS 13 (Ventura)</td>
+							<td>10</td>
+						</tr>
+						<tr class="pricing-table-list">
+							<td>chrome</td>
+							<td>108.0.5359.124</td>
+							<td>108.0.5359.125</td>
+							<td>108.0.5359.125</td>
+						</tr>
+						<tr class="pricing-table-list">
+							<td>Firefox</td>
+							<td>102.5</td>
+							<td></td>
+							<td>108.0.1</td>
+						</tr>
+						<tr class="pricing-table-list">
+							<td>Microsoft Edge</td>
+							<td>108.0.1462.54</td>
+							<td></td>
+							<td>108.0.1462.54</td>
+						</tr>
+						<tr class="pricing-table-list">
+							<td>Safari</td>
+							<td>Not tested</td>
+							<td></td>
+							<td>Not tested</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<br/>
+
+			<h2 style="Displays:inline-block;font-size:25px;line-height:1;letter-spacing:-0.5px;color:#333;padding-top:10px"><strong style="fint-weight:700;color:#fc6719">S</strong>ource code </h2>
+			<!--<p class="alive-stp">Copyright 2022 Jongkeun Park, Seungpil Jeong, Won Jong Choi, and Dongwan Hong -->
+			<div class="tutorial_expl02" style="background-color:#fbf7f1;padding:10px 20px 10px">
+				<ol>
+					<li style="padding-top:10px">
+						Github: <a href="javascript:popCitation('https://github.com/honglab-AIVE/AIVE_github');">https://github.com/honglab-AIVE/AIVE_github</a>
+					</li>
+				</ol>
+			</div>
+			<br/>
+			<h2 style="Displays:inline-block;font-size:25px;line-height:1;letter-spacing:-0.5px;color:#333;padding-top:10px"><strong style="fint-weight:700;color:#fc6719">C</strong>opyright 2022 </h2>
+			<!--<p class="alive-stp">Copyright 2022 Jongkeun Park, Seungpil Jeong, Won Jong Choi, and Dongwan Hong -->
+			<div class="tutorial_expl02" style="background-color:#fbf7f1;padding:10px 20px 10px">
+				<ol>
+					<li>
+						Licensed under the Apache License, Version 2.0 (the "License");<p></p>
+					</li>
+					<li style="padding-top:10px">
+						you may not use this file except in compliance with the License. <p></p>
+					</li>
+					<li style="padding-top:10px">
+						You may obtain a copy of the License at <a href="javascript:popCitation('http://www.apache.org/licenses/LICENSE-2.0');">http://www.apache.org/licenses/LICENSE-2.0</a>
+					</li>
+				</ol>
+			</div>
+		</div>
+		{% endblock %}
+	</div>
+	{% endblock %}
+
+	
+
+

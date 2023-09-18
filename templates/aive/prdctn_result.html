@@ -1,0 +1,428 @@
+
+ {% extends './layout/sub_layout.html' %}
+
+    
+    
+    {% block head%}
+    <style>
+        .btn_rank_active {
+            color: #fff;
+            background-color: #215795;  /*나 추가*/
+        }
+    </style>
+    <link rel="stylesheet" href="/static/css/icn3d/icn3d.css">
+    <script src="/static/js/common/three_0.137.0.min.js"></script>
+    <script src="/static/js/icn3d/icn3d.js"></script>
+    <script src="/static/js/icn3dWrapp.js"></script>
+
+    <script src="/static/js/hichart/highcharts.js"></script>
+    <script src="/static/js/hichart/highcharts-more.js"></script>
+    <script src="/static/js/hichart/modules/series-label.js"></script>
+    <script src="/static/js/hichart/modules/heatmap.js"></script>
+    <script src="/static/js/hichart/modules/exporting.js"></script>
+    <script src="/static/js/hichart/modules/boost-canvas.js"></script>
+    <script src="/static/js/hichart/modules/boost.js"></script>
+    <script src="/static/js/hichart/modules/accessibility.js"></script>
+    {% if devEnv == 'REAL'%}
+        <script src="/static/js/prdctnChart_aive.js"></script>
+    {% else %}
+        <script src="/static/js/prdctnChart.js"></script>
+    {% endif %}
+
+    <script src="/static/js/polarityUtils.js"></script>
+
+
+    <script type="text/javascript">
+        let _arrIcn3d = {};
+        let _paeChart, _plddtChart;
+        $(document).ready(()=>{
+            $.blockUI();
+
+            $.ajaxSetup({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }
+            });
+           
+            let arrPromise = [];
+
+            //pae 정보 조회 후 heatmap 차트를 그린다.
+            _paeChart = new PrdctnChart('divPaeMUT1', true);
+            _paeChart.initVirusSeq(document.forms.prdctnForm);
+            arrPromise.push(_paeChart.drawPae('{{af2_result_info.MUT.0.PAE_json_file}}',_arrIcn3d['divPdbMUT1']));
+            
+            //plddt line차트를 그린다.
+            _plddtChart = new PrdctnChart('divPlddtMUT1', true);
+            _plddtChart.initVirusSeq(document.forms.prdctnForm);
+            arrPromise.push(_plddtChart.drawPlddt('{{af2_result_info.MUT.0.pLDDT_cvs_file}}',_arrIcn3d['divPdbMUT1']));
+
+            Promise.all(arrPromise).then(arrData => {
+                //0:pae, 1:plddt
+                //첫 화면오픈시 행크 1번은 자동으로 조회하도록 한다.
+                showAf2($('.mlNum').eq(0),'MUT', '1', '{{af2_result_info.MUT.0.pdb_file}}', '{{af2_result_info.MUT.0.PAE_json_file}}', '{{af2_result_info.MUT.0.pLDDT_cvs_file}}');
+                
+                //polarity 표시 Monomor일때는 표시하도록 한다.
+                if ($('#output_virus_seq_2').val() == ''){
+                    polarityUtils = new PolarityUtils('divPolar', $('#input_virus_seq_1').val(), $('#output_virus_seq_1').val());
+            
+                    polarityUtils.drawVirusInfo().then(result => {
+                        polarityUtils.makeVirusSeqInfo();
+                        polarityUtils.makePolarityInfo();
+
+                        $('#liAlign').show();
+                        $.unblockUI();
+                    });
+                } else {
+                    $.unblockUI();
+                }
+            });
+        });
+
+        //결과를 다운로드 받는다.
+        var prdctnResultDownload = function(){
+            $('#prdctnDownForm').attr('action','/prdctn_result_download').submit();
+        }
+
+        //선택한 예측정보와 비교하는 창을 오픈한다.
+		const comparePrdctn = function(comparePrdctnInfoSeq){
+			if (confirm('Do you want to compare with the selected results?')){
+				window.open('', '_prdctn_compare');
+
+                $('#compareForm > #oriPrdctnInfoSeq').val($('#prdctn_info_seq').val());
+                $('#compareForm > #comparePrdctnInfoSeq').val(comparePrdctnInfoSeq);
+                $('#compareForm').attr('target','_prdctn_compare').submit();
+
+			}
+		}
+
+    </script>
+    {% endblock %}
+
+
+    <!-- 컨텐츠 컨테이너 시작-->
+    {% block ContentContainer %}
+    <div class="container participation">
+        <div class="subVisual inquiry">
+            <div class="mv_content">
+                <div class="text_area">
+                    <span>Prediction Result</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 제목 시작 -->
+        {% block titleArea %}
+        <div class="title_area">
+            <span>{{prdctn_info.prdctn_sj}}</span>
+        </div>
+        {% endblock %}
+        <!-- //제목 종료 -->
+        
+        <!-- 내용 시작 -->
+        
+        {% block mainContent%}
+        <!-- Main -->
+        <form id="prdctnForm" name="prdctnForm" method="POST">
+            {% csrf_token %}
+            <input type="hidden" id="prdctn_info_seq" name="prdctn_info_seq" value="{{prdctn_info.prdctn_info_seq}}"/>
+            <input type="hidden" id="aa_seq_knd" name="aa_seq_knd"  value="{{prdctn_info.aa_seq_knd}}"/>
+            <input type="hidden" id="trget_virus" name="trget_virus"  value="{{prdctn_info.trget_virus}}"/>
+            <input type="hidden" id="virus_mut_nm" name="virus_mut_nm"  value="{{prdctn_info.virus_mut_nm}}"/>
+            <input type="hidden" id="domain_nm" name="domain_nm" value="{{prdctn_info.domain_nm}}" />
+            <input type="hidden" id="prdctn_protein_struct" name="prdctn_protein_struct" value="{{prdctn_info.prdctn_protein_struct}}" />
+            <input type="hidden" id="input_virus_seq_1" name="input_virus_seq_1" value="{{prdctn_info.input_virus_seq_1}}" />
+            <input type="hidden" id="output_virus_seq_1" name="output_virus_seq_1" value="{{prdctn_info.output_virus_seq_1}}" />
+            <input type="hidden" id="output_virus_seq_2" name="output_virus_seq_2" value="{{prdctn_info.output_virus_seq_2}}" />
+            <input type="hidden" id="output_virus_seq_3" name="output_virus_seq_3" value="{{prdctn_info.output_virus_seq_3}}" />
+            <input type="hidden" id="output_virus_seq_4" name="output_virus_seq_4" value="{{prdctn_info.output_virus_seq_4}}" />
+            <input type="hidden" id="output_virus_seq_5" name="output_virus_seq_5" value="{{prdctn_info.output_virus_seq_5}}" />
+            <input type="hidden" id="output_virus_seq_6" name="output_virus_seq_6" value="{{prdctn_info.output_virus_seq_6}}" />
+            <input type="hidden" id="output_virus_seq_7" name="output_virus_seq_7" value="{{prdctn_info.output_virus_seq_7}}" />
+            <input type="hidden" id="output_virus_seq_8" name="output_virus_seq_8" value="{{prdctn_info.output_virus_seq_8}}" />
+            <input type="hidden" id="trget_seq_rgin_st_lc" name="trget_seq_rgin_st_lc" value="{{prdctn_info.trget_seq_rgin_st_lc}}" />
+            <input type="hidden" id="trget_seq_rgin_end_lc" name="trget_seq_rgin_end_lc" value="{{prdctn_info.trget_seq_rgin_end_lc}}" />
+            <input type="hidden" id="pae" name="pae" />
+            <input type="hidden" id="plddt" name="plddt" />
+            
+            {% if prdctnForm.errors%}
+            <div class="alert alert-danger">
+                {% for field in prdctnForm %}
+                <!--필드 오류-->
+                {% if field.errors %}
+                <div>
+                    <strong>{{field.label }}</strong>
+                    {{ field.errors}}
+                </div>
+                {% endif %}
+                {% endfor %}
+                <!-- 넌필드 오류 -->
+                {% for error in prdctnForm.non_field_errors %}
+                <div>
+                    <strong>{{ error }}</strong>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+    
+            <div class="participation_box board_area">
+                <!-- info input -->
+                <div class="participate_area sars">
+                    <div id="helpPopup">
+                        <p class="pop_text"></p>
+                    </div>
+                    <ul class="input_list">
+                        {% if af2_result_info %}
+                        <li style="padding-top:30px;">
+                            <div class="tutorial_tit2">
+                                <div class="resTitBg">
+                                    ① 3D Structure Prediction
+                                    <img id="imgid" class="help_pop noprint" src="/static/img/sub/ico_help.png" alt="help" style="display: inline">
+                                    <span style="display:none">
+                                        PAE is a value that estimates the difference between the relative locations of two residues of the model and the real model. A low PAE value indicates that the accuracy of the relative location of the two residues is high.<br/>
+                                        pLDDT is a value that estimates the reliability of the model. At the same time, it indicates how well the protein structure folds in the corresponding location.
+                                    </span>
+                                 </div>
+                            </div>
+                            <div class="tutorial_expl01" style="margin:0px;">
+                                <ol>
+                                    <li> The PAE is a value that estimates the difference between the relative locations of two residues of the model and the real model. The value has a negative correlation with the accuracy of the pairwise position of two residues. As the PAE value decreases, the accuracy increases and vice versa. </dl>
+                                    <li> The pLDDT is a value that estimates the reliability of the model. The value indicates the likelihood of folding of the protein structure at that location, with higher values indicating a greater likelihood of folding.</dl>
+                                </ol> 
+                            </div>
+                            <div class="input_area">
+                                <a class="btn_dl" href="#resultFileDown">Download all file</a>
+                                <div class="model_list">
+                                    {% for tmp_result in af2_result_info.MUT %}
+                                    <button id="{{forloop.counter}}" type="button" class="mlNum" onclick="showAf2(this, '{{tmp_result.aa_seq_knd}}', '{{forloop.counter}}', '{{tmp_result.pdb_file}}', '{{tmp_result.PAE_json_file}}', '{{tmp_result.pLDDT_cvs_file}}')">{{forloop.counter}}</button>
+                                    {% endfor %}
+                                    <img id="imgid" class="help_pop noprint" src="/static/img/sub/ico_help.png" alt="help" style="display: inline">
+                                    <span style="display:none">
+                                        In the case of Local prediction, 5 prediction models are created, and can be checked when a number between 1 to 5 is applied based on average pLDDT value.
+                                    </span>
+                                </div>
+                                <div class="stit" style="margin-right:10px !important;"> 
+                                    <span class="dot">Protein structure (Mutation)</span>
+                                    <a class="btn_compare" href="#myPrdctnList">Compare</a>
+                                </div>
+                                {% for tmp_result in af2_result_info.MUT %}
+                                <div id="divMUT{{forloop.counter}}" style="display:none; width:100%;" >
+                                    <div style="text-align:left;padding-top: 25px;">
+                                        {% if prdctn_info.prdctn_protein_struct == 'MT' %}
+                                        <span style="background:#f3d788;">
+                                        <font style="font-wieght:bold;">DockQ : </font><font style="font-wieght:bold; color:blue;">{{tmp_result.avg_plddt}}</font>
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ICn_area" style="margin-top:2px;">
+                                        <div id="divPdbMUT{{forloop.counter}}" style="width:60%;"></div>
+                                        <div id="divPaeMUT{{forloop.counter}}" style="width:40%;height:400px;"></div>
+                                    </div>
+                                    <div class="ICn_area">
+                                        <div id="divPlddtMUT{{forloop.counter}}Line" style="width:70%;height:350px;float:left;"></div>
+                                        <div id="divPlddtMUT{{forloop.counter}}Boxplot" style="width:30%;height:350px; float:left;"></div>
+                                    </div>
+                                    
+                                </div>
+                                {% endfor %}
+
+                            </div>
+                        </li>
+                        <!-- Alignment -->
+                        <li id="liAlign" class="alive-stp stp2" style="display:none;">
+                            <div class="tutorial_tit2">
+                                <div class="resTitBg">
+                                    ② Virus amino acid info
+                                </div>
+                            </div>
+                            <div class="tutorial_expl01" style="margin:0px;">
+                                <ol>
+                                    <li> Visualizes and tabulates changes in repeated polarity structure sequence for wild-type sequences and mutated type sequences used in ①.</li>
+                                </ol> 
+                            </div>
+                            <div class="stit2"> 
+                                <span class="dot"> Sequence without mutations (Reference)</span>
+                            </div>
+
+                            <div class="alignment-area">
+                                <div id="divPolarInput" class="am-list-row">
+                                </div>
+                            </div>
+                            
+                            <div class="stit2"> 
+                                <span class="dot"> Sequence with mutations (Mutation)</span>
+                            </div>
+                            <div class="alignment-area">
+                                <div id="divPolarOutput" class="am-list-row">
+                                </div>
+                            </div>
+                            <div class="input_area">
+                                <!-- 범례 -->
+                                <div class="legend-box">
+                                    <table class="tbl-list tbl-legend">
+                                        <colgroup>
+                                            <col style="width: 10%"/>
+                                            <col style="width: 40%" />
+                                            <col style="width: 5%" />
+                                            <col />
+                                        </colgroup>
+                                        <tbody>
+                                            <tr>
+                                                <th colspan="3">Polarity feature</th>
+                                                <th>Amino acid</th>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" rowspan="4">
+                                                    Polarity features
+                                                </th>
+                                                <td>
+                                                    Non-Polar
+                                                </td>
+                                                <td>
+                                                    <span class="color color05">N</span>
+                                                </td>
+                                                <td>
+                                                    Ala (A), Val (V), Leu (L), Gly (G), Ile (I), Met (M), Trp (W), Phe (F), Pro (P)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Polar
+                                                </td>
+                                                <td>
+                                                    <span class="color color02">P</span>
+                                                </td>
+                                                <td>
+                                                    Ser (S), Cys (C), Asn (N) , Gln (Q), Thr (T), Tyr (Y)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Acidic
+                                                </td>
+                                                <td>
+                                                    <span class="color color08">A</span>
+                                                </td>
+                                                <td>
+                                                    Asp (D), Glu (E)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Basic
+                                                </td>
+                                                <td>
+                                                    <span class="color color12">B</span>
+                                                </td>
+                                                <td>
+                                                    Lys (K), Arg (R), His (H)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" rowspan="5">
+                                                    Five amino acid properties
+                                                </th>
+                                                <td>
+                                                    Amino acids with electrically charged side chain_negative
+                                                </td>
+                                                <td>
+                                                    <span class="color">1</span>
+                                                </td>
+                                                <td>
+                                                    Lys (K), Arg (R), His (H)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Amino acids with electriccally charged side chain_positive
+                                                </td>
+                                                <td>
+                                                    <span class="color">2</span>
+                                                </td>
+                                                <td>
+                                                    Asp (D), Glu (E)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Amino acids with Polar uncharged side chain
+                                                </td>
+                                                <td>
+                                                    <span class="color color12">3</span>
+                                                </td>
+                                                <td>
+                                                    Ser (S), Asn (N) , Gln (Q), Thr (T)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Special cases
+                                                </td>
+                                                <td>
+                                                    <span class="color">4</span>
+                                                </td>
+                                                <td>
+                                                    Cys (C), Gly (G), Pro (P)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Amino acids with hydrophobic side chain
+                                                </td>
+                                                <td>
+                                                    <span class="color">5</span>
+                                                </td>
+                                                <td>
+                                                    Ala (A), Val (V), Leu (L), Ile (I), Met (M), Trp (W), Phe (F)
+                                                </td>
+                                            </tr>                                           
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="input_area">
+                                <div class="stit"> 
+                                    <span class="dot"> Polarity features</span>
+                                </div>
+                                <div class="ICn_area" style="border:0px !important;">
+                                    <table id="divPolarTbl" class="info_table">
+                                        <colgroup>
+                                            <col style="width: 20%" />
+                                            <col style="width: 40%" />
+                                            <col/>
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2">Polarity structure</th>
+                                                <th colspan="2">Count</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Reference</th>
+                                                <th>Mutation</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+                        {% else %}
+                        <li>
+                            No Data
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </form>
+        {% endblock %}
+        <!-- //내용 종료 -->
+
+        <!-- prediction result 결과 다운로드 팝업 추가-->
+        {% include './pop/result_file_downl.html' %}
+
+        <!-- virus seq 팝업 추가-->
+        {% include './pop/virus_aa_seq.html' %}
+
+        <!-- virus seq 팝업 추가-->
+		{% include './pop/my_prdctn_list.html' %}
+    </div>
+    {% endblock %}

@@ -1,0 +1,34 @@
+{% extends './base_layout.html' %}
+
+
+
+            <!-- 본문 컨텐츠 시작 -->
+            {% block container %}
+				<!-- 컨텐츠 컨테이너 시작-->
+				{% block ContentContainer %}
+				<div class="container participation">
+					<div class="subVisual inquiry">
+						<div class="mv_content">
+							<div class="text_area">
+								<span>Prediction</span>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 제목 시작 -->
+					{% block titleArea %}
+						<div class="title_area">
+							<span>Virus</span>
+						</div>
+					{% endblock %}
+					<!-- //제목 종료 -->
+					
+					<!-- 내용 시작 -->
+					{% block mainContent%}
+					
+					{% endblock %}
+					<!-- //내용 종료 -->
+				</div>
+				{% endblock %}
+			{% endblock %}
+			<!-- //본문 컨텐츠 종료 -->

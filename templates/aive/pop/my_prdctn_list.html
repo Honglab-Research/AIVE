@@ -1,0 +1,61 @@
+<!-- modal start -->
+<div data-ml-modal id="myPrdctnList">
+    <a href="#!" class="modal-overlay"></a>
+    <div class="modal-dialog modal-dialog-lg">
+        <a href="#!" class="modal-close">&times;</a>
+        <h3>Select predictions for comparison</h3>
+        <div class="modal-content" style="height:auto !important;">
+            <form id="compareForm" name="comapreForm" method="GET" action="{% url 'aive:prdctn_result_compare' %}">
+                <input type="hidden" id="oriPrdctnInfoSeq" name="oriPrdctnInfoSeq" />
+                <input type="hidden" id="comparePrdctnInfoSeq" name="comparePrdctnInfoSeq" />
+            </form>
+            {% csrf_token %}
+                <div class="tbl-base mgt-m">
+                    <table>
+                        <colgroup>
+                            <col />
+                            <col style="width:25%;"/>
+                            <col style="width:25%;"/>
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Project name</th>
+                                <th scope="row">Prediction</th>
+                                <th scope="row">Target virus</th>
+                            </tr>
+                            {% if prdctn_list %}
+                                {% for prdctn in prdctn_list%}
+                                <tr style="cursor:pointer;" onclick="comparePrdctn('{{ prdctn.prdctn_info_seq }}');" onmouseover="$(this).children().css('color','#F00')" onmouseout="$(this).children().css('color','#666')">
+                                    <td style="text-align: left;">
+                                        {{ prdctn.prdctn_sj }}
+                                    </td>
+                                    <td>
+                                        {% if prdctn.prdctn_protein_struct == 'MN' %}
+                                        Monomor
+                                        {% else %}
+                                        Multimor
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% for virus in virus_list %}
+                                            {% if prdctn.trget_virus == virus.code %}
+                                                {{ virus.code_nm }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                {% endfor%}
+                            {% else %}
+                                <tr>
+                                    <td colspan="3">
+                                        No Data
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+</div>
+<!-- modal 끝-->

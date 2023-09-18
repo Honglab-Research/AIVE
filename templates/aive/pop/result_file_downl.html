@@ -1,0 +1,195 @@
+<!-- info modal -->
+<div data-ml-modal id="resultFileDown">
+    <a href="#!" class="modal-overlay"></a>
+    <div class="modal-dialog modal-dialog-lg">
+        <a href="#!" class="modal-close">&times;</a>
+        <h3>Prediction result download</h3>
+        <div class="modal-content" style="height:auto !important;">
+            <form id="prdctnDownForm" name="prdctnDownForm" action="/prdctn_result_download" method="POST"> 
+            {% csrf_token %}
+            <input type="hidden" name="prdctn_info_seq" value="{{prdctn_info.prdctn_info_seq}}"/>
+			<input type="hidden" name="aa_seq_knd" value="MUT"/>
+			<input type="hidden" name="prdctn_protein_struct" value="{{prdctn_info.prdctn_protein_struct}}" />
+            
+                <div class="tbl-base mgt-m">
+                    <table>
+                        <colgroup>
+                            <col style="width:25%;"/>
+                            <col />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Common result files.</th>
+                                <td class="input_area" style=" margin-bottom: -50px;">
+                                    <input type="checkbox" id="fasta" name="fasta" checked value="Y">
+                                    <label for="fasta">
+                                        fasta
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="ranking" name="ranking" checked value="Y">
+                                    <label for="ranking">
+                                        Ranking JSON
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Rank 1 result files.</th>
+                                <td class="input_area" style="line-height:15px">
+                                    <input type="checkbox" id="pdb1" name="pdb1" checked value="Y">
+                                    <label for="pdb1">
+                                        PDB
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pae_json1" name="pae_json1" checked value="Y">
+                                    <label for="pae_json1">
+                                        PAE JSON
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pae_cvs1" name="pae_cvs1" checked value="Y">
+                                    <label for="pae_cvs1">
+                                        PAE CVS
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="plddt1" name="plddt1" checked value="Y">
+                                    <label for="plddt1">
+                                        pLDDT CVS
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pkl1" name="pkl1" value="Y">
+                                    <label for="pkl1">
+                                        PKL
+                                    </label>
+                                </td>
+                            </tr>     
+                            <tr>
+                                <th scope="row">Rank 2 result files.</th>
+                                <td class="input_area" style="line-height:15px">
+                                    <input type="checkbox" id="pdb2" name="pdb2" checked value="Y">
+                                    <label for="pdb2">
+                                        PDB
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pae_json2" name="pae_json2" checked value="Y">
+                                    <label for="pae_json2">
+                                        PAE JSON
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pae_cvs2" name="pae_cvs2" checked value="Y">
+                                    <label for="pae_cvs2">
+                                        PAE CVS
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="plddt2" name="plddt2" checked value="Y">
+                                    <label for="plddt2">
+                                        pLDDT CVS
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pkl2" name="pkl2" value="Y">
+                                    <label for="pkl2">
+                                        PKL
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Rank 3 result files.</th>
+                                <td class="input_area" style="line-height:15px">
+                                    <input type="checkbox" id="pdb3" name="pdb3" checked value="Y">
+                                    <label for="pdb3">
+                                        PDB
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pae_json3" name="pae_json3" checked value="Y">
+                                    <label for="pae_json3">
+                                        PAE JSON
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pae_cvs3" name="pae_cvs3" checked value="Y">
+                                    <label for="pae_cvs3">
+                                        PAE CVS
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="plddt3" name="plddt3" checked value="Y">
+                                    <label for="plddt3">
+                                        pLDDT CVS
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pkl3" name="pkl3" value="Y">
+                                    <label for="pkl3">
+                                        PKL
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Rank 4 result files.</th>
+                                <td class="input_area" style="line-height:15px">
+                                    <input type="checkbox" id="pdb4" name="pdb4" checked value="Y">
+                                    <label for="pdb4">
+                                        PDB
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pae_json4" name="pae_json4" checked value="Y">
+                                    <label for="pae_json4">
+                                        PAE JSON
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pae_cvs4" name="pae_cvs4" checked value="Y">
+                                    <label for="pae_cvs4">
+                                        PAE CVS
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="plddt4" name="plddt4" checked value="Y">
+                                    <label for="plddt4">
+                                        pLDDT CVS
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pkl4" name="pkl4" value="Y">
+                                    <label for="pkl4">
+                                        PKL
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Rank 5 result files.</th>
+                                <td class="input_area" style="line-height:15px">
+                                    <input type="checkbox" id="pdb5" name="pdb5" checked value="Y">
+                                    <label for="pdb5">
+                                        PDB
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pae_json5" name="pae_json5" checked value="Y">
+                                    <label for="pae_json5">
+                                        PAE JSON
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pae_cvs5" name="pae_cvs5" checked value="Y">
+                                    <label for="pae_cvs5">
+                                        PAE CVS
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="plddt5" name="plddt5" checked value="Y">
+                                    <label for="plddt5">
+                                        pLDDT CVS
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" id="pkl5" name="pkl5" value="Y">
+                                    <label for="pkl5">
+                                        PKL
+                                    </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="input_area">
+                    <div class="result-box"></div>
+                    <div class="alignment-area">
+                        <div style="margin-top: 20px">
+                            <button type="button" class="btn_dlzip" style="display:block;" onclick="prdctnResultDownload();">Download .zip file</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- info modal 끝-->

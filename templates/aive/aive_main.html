@@ -1,0 +1,71 @@
+
+	{% extends './layout/main_layout.html' %}
+
+	{% block head%}
+		<script type="text/javascript">
+			
+		</script>
+	{% endblock %}
+
+
+    {% block mainBanner%}
+	<section class="section1">
+		<div class="main_introduce">
+			<div class="introList">
+				<div class="text_area">
+					<span>AIVE</span>
+					<p class="introduce">
+						<b>A</b>rtificial <b>I</b>ntelligence analytics toolkit for
+									predicting <b>V</b>irus mutation in prot<b>E</b>in
+					</p>
+					<!--
+						<div class="intro_text">
+							<p class="text">AIVE 설명 및 소개글 영역 입니다.</p>
+						</div>
+					-->
+				</div>
+			</div>
+		</div>
+	</section>
+	{% endblock %}
+
+	{% block mainContent%}
+	<section class="section2">
+		<div class="flowchart_area">
+			<!--<span class="section_title"> AIVE 실행 프로세스 플로우차트 </span>-->
+			<div class="expl_text"> 
+				<div class="info_box">
+					<b class="pointb">A</b>rtificial <b class="pointb">I</b>ntelligence analytics toolkit for predicting <b class="pointb">V</b>irus mutation in prot<b class="pointb">E</b>in (<b class="points">AIVE</b>) 
+					is a Web and GPU based analysis tool that can predict protein structures and properties from user-entered viral sequences. AIVE uses AlphaFold2 software (<a href="https://github.com/deepmind/alphafold">https://github.com/deepmind/alphafold</a>) to evaluate protein structures. AIVE provides independently developed mathematical models (SCPS, PS, MR, BPES, APESS). It provides information on structural differences (SCPS, PS), physical changes (MR), and biochemical changes (BPES) at the amino acid and nucleotide levels. These tools were calculated using various information such as amino acid chemical properties (pH, Hydrophobic, Residue), molecular structure prediction results (PAE, pLDDT), mutation and codon frequencies in viruses, and amino acid polarity features. AIVE serves optimized analysis and prediction for SARS-CoV-2 viral mutations. Analysis and prediction of other virus species will be updated later.
+				</div>
+				<div class="list_box">
+				   <div class="mb_30">
+					<p class="tit">The information and analysis tools we provide are the following:</p>
+				   <ul class="dot_list">
+					 <span class="fs_1">A. Protein structure prediction from viral sequences using learning modelsPrediction of folding and docking from viral mutations</span>
+					 <li>Comparison of folding and docking scores</li>
+				   </ul>
+					<ul class="dot_list">
+						<span class="fs_1">B. Polarity changes in protein sequencesMeasurement of repeated polarity changes</span>
+				   </ul>
+						<ul class="dot_list">
+					 <span class="fs_1">C. Mathematical models based on amino acid and nucleotide levels (MR & BPES)</span>
+					 <li>Scoring of rate of change for nucleotide levels</li>
+					 <li>Scoring of rate of change for amino acid properties (Residue, Hydrophobic, and pH)					</li>
+				   </ul>
+					<ul class="dot_list">
+					 <span class="fs_1">D. Comprehensive mathematical analysis model(APESS)</span>
+					 <li>Integrating results for protein structure prediction, polarity change, and nucleotide and amino acid properties levels</li>
+				   </ul>
+				   </div>
+			   </div>
+			
+			<div class="img_area">
+				<img
+					src="/static/img/main/img_aive.png"
+					alt="AIVE"
+				/>
+		  </div>
+		</div>
+	</section>
+	{% endblock %}

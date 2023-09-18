@@ -1,0 +1,1069 @@
+
+    {% extends './layout/sub_layout.html' %}
+
+    {% block head%}
+        <style>
+            .ncleoBox {
+                border: solid 1px #bbb;
+                background: white;
+                width: 100px;
+                display:none;
+                position:absolute;
+            }
+
+            .ncleoBox a {
+                font-size: 20pt;
+            }
+
+            .ncleoBox a:hover {
+                color: red;
+            }
+            
+            .ncleo {
+                display:block;
+                cursor: pointer;
+            }
+
+            .ncleoTit {
+                width: 100%;
+                background:#051e48;
+                color: #fff;
+                font-size: 0.9em;
+            }
+
+            .spanAa{
+                display: inline-block;
+                position:relative;
+            }
+            .spanAa:hover .ncleoBox {
+                display: block;
+                left: 25px;
+                top: 0px
+            }
+
+        </style>
+        <script src="/static/js/hichart/highcharts.js"></script>
+        <script src="/static/js/hichart/modules/xrange.js"></script>
+        <script src="/static/js/hichart/modules/exporting.js"></script>
+        <script src="/static/js/hichart/modules/accessibility.js"></script>
+        {% if devEnv == 'REAL'%}
+            <script src="/static/js/prdctnChart_aive.js"></script>
+        {% else %}
+            <script src="/static/js/prdctnChart.js"></script>
+        {% endif %}
+
+        
+        <script type="text/javascript">
+            let _demoYn = 'N';
+            const _allowAa = ['A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y'];
+            $(document).ready(function(){
+                //Lineage mouseover 이벤트
+                $('#tblDomain').find('img[id!=covid_12]').mouseover(function(obj){
+                    $(this).attr('src','/static/img/sub/'+ $(this).attr('id') + '_on.gif');
+                });
+
+                //Lineage mouseout 이벤트
+                $('#tblDomain').find('img[id!=covid_12]').mouseout(function(obj){
+                    $(this).attr('src','/static/img/sub/'+ $(this).attr('id') + '.gif');
+                });
+
+                //Lineage image click 이벤트
+                $('#tblDomain').find('img[id!=covid_12]').click(function(obj){
+                    getDomainAaSeq($(this).data('domain'));
+                });
+                
+                //sub domain 그리기
+                orf1abSubChart = new PrdctnChart('divORF1abSub',true, undefined, undefined, getDomainAaSeq);
+                orf1abSubChart.drawSubDomain('ORF1ab');
+                sSubChart = new PrdctnChart('divSBSub',true, undefined, undefined, getDomainAaSeq);
+                sSubChart.drawSubDomain('S');
+                nSubChart = new PrdctnChart('divNBSub',true, undefined, undefined, getDomainAaSeq);
+                nSubChart.drawSubDomain('N');
+            });
+
+            //domain 정보를 조회한다.
+            var getDomainAaSeq = function(domainNm){
+                if ($('#virus_mut_nm').val() == ''){
+                    alert('Choose a virus variant.');
+                    return;
+                }
+
+                //선택된 변이 및 domain에 해당하는 정보를 조회한다.
+                //ORF1ab, S, N는 sub domain 테이블을 표시한다.
+                $('#liSubDomain').hide();
+                $('#divORF1abSub').hide();
+                $('#divSBSub').hide();
+                $('#divNBSub').hide();
+                if (domainNm == 'ORF1ab' || domainNm == 'SB' || domainNm == 'NB'){
+                    $('#liSubDomain').show();
+                    $(`#div${domainNm}Sub`).show();
+                    return;
+                } 
+
+                $.blockUI();
+
+                $.ajaxSetup({
+                    headers: { "X-CSRFToken": '{{csrf_token}}' }
+                });
+
+                $.ajax({
+                    url:'/common/get_domain_seq_info',
+                    data:{
+                        virus_mut_nm : $('#virus_mut_nm').val(),
+                        domain_nm : domainNm
+                        },
+                    type:'GET',
+                    dataType:'json'
+                })
+                .done(function(result){
+                    if (result != ''){
+                        $('input[name=tmp_input_seq]').val(result.wuhan_aa_info.aa_seq);
+                        $('input[name=input_virus_rna_seq]').val(result.wuhan_aa_info.rna_seq);
+                        $('#output_virus_seq_1').val(result.lineage_aa_info.aa_seq);
+                        $('#output_virus_rna_seq_1').val(result.lineage_aa_info.rna_seq);
+                        $('#trget_seq_rgin_st_lc').val(result.lineage_aa_info.seq_rgin_st_lc);
+                        $('#trget_seq_rgin_end_lc').val(result.lineage_aa_info.seq_rgin_end_lc);
+                        $('#domain_nm').val(domainNm);
+                        makeAaList($('input[name=tmp_input_seq]').get(0));
+                    }
+                })
+                .fail(function(xhr, status, errorThrown) {
+                    alert('['+ status + ']\n contact the person in charge of the system.');
+                })
+                .always(function() {
+                    $('#liDomain').hide();
+                    $.unblockUI();
+                });
+            }
+
+            // output virus seq를 클립보드로 복사한다.
+            //AA를 복사할 수 있도록 한다.
+            var copyText = function(obj){
+                $(obj).parent().find('input').select()
+                document.execCommand("copy");
+    
+                alert('Copy content to clipboard complete');
+            }
+
+
+            //input virus seq 기준 연관 항목 id 소팅
+            var resetSeqNo = function(){
+                let seqCnt = $('#divInputSeq').find('div').length;
+
+                for(var i=0; i<seqCnt; i++){
+                    $('#divInputSeq').find('div').eq(i).attr('id','divInputSeq_' + (i+1));
+                    $('#divAaInfo').find('div').eq(i).attr('id','divAaInfo_' + (i+1));
+                    $('#divOutputSeq').find('div').eq(i).attr('id','divOutputSeq_' + (i+1));
+                }
+
+            }
+
+            //input virus 추가 버튼 이벤트
+            var addInputSeq = function(btnObj) {
+                //최대 입력수 체크(8개)
+                if ($('input[name=tmp_input_seq]').length == 8){
+                    alert('AA Seq can be input up to 8 of them.');
+                    return;
+                }
+                
+                //input virus seq 추가
+                let divnInputClone =  $(btnObj).parent().clone();
+                //값 초기화
+                $(divnInputClone).find('input').val('');
+                $('#divInputSeq').append(divnInputClone);
+                $(divnInputClone).find('input').focus();
+
+                //AA Seq 추가
+                let divAaClone = $('#divAaInfo').children().eq(0).clone();
+                $(divAaClone).empty();
+                $('#divAaInfo').append(divAaClone);
+
+                //output seq 추가
+                let divOutputClone = $('#divOutputSeq').children().eq(0).clone();
+                $(divOutputClone).find('input').val('');
+                $('#divOutputSeq').append(divOutputClone);
+
+                //각 항목의 div ID를 새롭게 정렬한다.
+                resetSeqNo();
+            }
+
+            //input virus 삭제 버튼 이벤트
+            var delInputSeq = function(btnObj){
+                let divParent =  $(btnObj).parent();
+                let objIdx = $(divParent).attr('id').replace(/[^0-9]/g,'');
+                //최소 입력수 체크(1개)
+                if ($('input[name=tmp_input_seq]').length == 1){
+                    //한개일때는 값만 초기화한다
+                    $('#divInputSeq_' + objIdx).find('input').val('');
+                    $('#divAaInfo_' + objIdx).html('');
+                    $('#divOutputSeq_' + objIdx).find('input').val('');
+                } else {
+                    //삭제되는 id를 기준으로 관련 정보를 전부 삭제한다.
+                    $('#divInputSeq_' + objIdx).remove();
+                    $('#divAaInfo_' + objIdx).remove();
+                    $('#divOutputSeq_' + objIdx).remove();
+                }
+
+                //각 항목의 div ID를 새롭게 정렬한다.
+                resetSeqNo();
+            }
+
+            //AA 목록을 그린다.
+            var makeAaList = function(txtObj) {
+                $(txtObj).val($(txtObj).val().toUpperCase());
+
+                    let divParent = $(txtObj).parent();
+                    let objIdx = $(divParent).attr('id').replace(/[^0-9]/g,'');
+                    
+                    let divAaInfo = $('#divAaInfo_' + objIdx);
+    
+                    $(divAaInfo).children().remove();
+    
+                    let tmpText = $(txtObj).val();
+                    let pos = 0;
+                    for(let i=0;i<tmpText.length;i++){
+                        if (eval($('#trget_seq_rgin_st_lc').val()) > 0) {
+                            pos = eval($('#trget_seq_rgin_st_lc').val()) + i;
+                        } else {
+                            pos = i+1;
+                        }
+
+                        let tmpSpan = '<span class="txt color" onclick="aaClick(this)" >';
+                        
+                        //target virus sars cov2 일경우 aa 변경하는 이벤트를 제거한다.
+                        if ($('#trget_virus').val() == 'CV2'){
+                            //wuhan-HU-1 선택 될 경우 제외
+                            if($('#virus_mut_nm').val() != 'WH'){
+                                tmpSpan = '<span class="txt color" style="cursor:default;">';
+                            }
+                        }
+                        
+
+                        $(divAaInfo).append(
+                                $('<span class="row">').append(
+                                            $('<span class="num">').text(pos)
+                                        )
+                                        .append(
+                                            $(tmpSpan).text(tmpText[i])
+                                        )
+                                        .append(
+                                            $('<input type="hidden" name="tmp_nucleo" />')
+                                        )
+                                );
+                    }
+
+                //Output에도 같이 반영한다.
+                //SARs-CoV-2가 아닐경우 반영한다.
+                
+                if ($('#trget_virus').val() != 'CV2') {
+                    $('#divOutputSeq_' + objIdx).find('input').val(tmpText);
+                } else {
+                    $('#divOutputSeq_' + objIdx).find('input').val($('#output_virus_seq_1').val());
+                }
+            }
+
+            //Input AA 입력 이벤트 처리
+            var keypupInputSeq = function(obj){
+                //허용된 20개의 AA만 입력될 수 있도록 한다.
+                let regExp = /[^acdefghiklmnpqrstvwyACDEFGHIKLMNPQRSTVWY]/g;
+                let ele = event.target;
+                if (regExp.test(ele.value)) {
+                    ele.value = ele.value.replace(regExp, '');
+                }
+
+                var x = event.charCode || event.keyCode; 
+                let inputKey = event.key.toUpperCase();
+
+                //알파벳과 shift, 왼쪽,오른쪽 화살표일 경우만 실행
+                if (_allowAa.includes(inputKey) || (x >= 37 && x <= 40)){
+                    makeAaList(obj);
+                } 
+
+                //선택된 영역 이벤트 처리
+                selectionTextArea(obj);
+            }
+
+            //Upload fasta 버튼 이벤트
+            var loadFile = async function (file, aa_knd) {
+                let text = await file.text();
+                if (aa_knd == 'virus'){
+                    if (text != '' && (text[0] == '>' || _allowAa.includes(text[0]))){
+                        let arrText = text.split('\n');
+                        let idx = 1;
+
+                        //기존 입력항목 삭제
+                        for (let i=0;i<8;i++){
+                            $('#divInputSeq_1').find('button').eq(1).click();
+                        }
+
+                        for (let i=0;i<arrText.length;i++){
+                            //짝수 줄에 있는 Text는 AA seq로 생각하고 추가한다.
+                            if (i%2==1){
+                                if (i==1){
+                                    //첫번째 데이터는 기존에 있는 데이터를 등록
+                                    $('#divInputSeq_' + idx).find('input').val(arrText[i]);
+                                    makeAaList($('#divInputSeq_'  + idx).find('input').get(0));
+                                    ++idx;
+                                } else {
+                                    let tmpBtn = $('#divInputSeq_1').find('button').eq(0);
+                                    addInputSeq(tmpBtn[0]);
+                                    //두번째 데이터는 입력항목 추가 후 데이터 등록
+                                    $('#divInputSeq_'  + idx).find('input').val(arrText[i]);
+
+                                    makeAaList($('#divInputSeq_'  + idx).find('input').get(0));
+                                    ++idx;
+                                }
+                            }
+                        }
+
+                        $('#input_virus_seq_1').val(text);
+                        //Alignment를 한다.
+                        $('#input_virus_seq_1').keyup();
+                    } else {
+                        alert('Please check the uploaded fasta file.');
+                        return;
+                    }
+                } else {
+                    $('#input_virus_seq_2').val(text);
+                }
+            }
+
+            //aa click 시 aa 목록 표시
+            var aaClick = function(obj){
+                //다른 aa 목록은 다 삭제한다.
+                $('.am-list-col.tmpAa').remove();
+
+                if ($(obj).find('#tmpAa').children().length == 0){
+                    tmpAa = $('#divSelAa').clone().attr('id','tmpAa');
+                    $(obj).append(tmpAa);
+                    $(obj).children('.am-list-col').css('display','block').addClass('tmpAa');
+                } else {
+                    $(obj).find('#tmpAa').show();
+                }
+            }
+
+            //aa 목록에서 aa click시 색을 반영하고 목록 숨기기
+            var clickAa = function(idx, strCondon){
+                let outputAa = '', outputRna = '';
+                let selAa = $(`.spanAa.color.color${idx}`);
+                let divParent = $(selAa).parent().parent().parent().parent().filter('div[id^=divAaInfo]');
+                let objIdx = $(divParent).attr('id').replace(/[^0-9]/g,'');
+                
+                let nowAa = $(selAa).parent().parent().filter('span.txt.color');
+                let nowNucleo = $(nowAa).parent().find('input');
+                $(nowAa).removeClass();
+                $(nowAa).addClass('txt color color'+idx);
+
+                $(nowAa).text($(selAa).data('aa'));
+
+                $(nowNucleo).val(strCondon);
+
+                $(selAa).parent().filter('.am-list-col').hide();
+
+                $(divParent).find('.txt.color').each((idx,obj) => {
+                    outputAa += $(obj).text().slice(0,1);
+                });
+
+                $(divParent).find('input[name=tmp_nucleo]').each((idx,obj) => {
+                    outputRna += $(obj).val() + ',';
+                });
+
+                //output에 저장
+                $('#divOutputSeq_' + objIdx).find('input[name=tmp_output_seq]').val(outputAa);
+                $('#divOutputSeq_' + objIdx).find('input[name=tmp_output_rna_seq]').val(outputRna);
+            }
+
+            //예측 작업을 시작한다.
+            var runPrdctn = function(prdctnKnd){
+                //데모면 바로 목록으로 이동하도록 한다.
+                if (_demoYn == 'Y') {
+                    $('#demo_yn').val('demo');
+                    $('#demoForm').submit();
+                    return;
+                }
+
+                {% if user.is_authenticated %}
+                    if ('colab' == prdctnKnd){
+                        window.open('https://colab.research.google.com/github/deepmind/alphafold/blob/main/notebooks/AlphaFold.ipynb','pop_colab');
+                    } else if ('server' == prdctnKnd){
+                        //입력된 input virus seq 만큼 각 항목에 값을 입력한다.
+                        let seqCnt = $('#divInputSeq').find('div').length;
+
+                        for(var i=1; i<=seqCnt; i++){
+
+                            //입력된 AA 길이 확인
+                            let inputObj = $('#divInputSeq_' + i).find('input[name=tmp_input_seq');
+
+                            if ($(inputObj).val() != '' && ($(inputObj).val().length < 16 || $(inputObj).val().length > 2700)){
+                                $(inputObj).focus();
+                                alert('The length range for sequences that are covered is between 16 and 2700.');
+                                return;
+                            }
+                            //input virus seq 입력
+                            $('#input_virus_seq_' + i).val($(inputObj).val());
+
+                            //output virus seq 입력
+                            $('#output_virus_seq_' + i).val($('#divOutputSeq_' + i).find('input[name=tmp_output_seq').val());
+
+                            //output virus rna seq 입력
+                            $('#output_virus_rna_seq_' + i).val($('#divOutputSeq_' + i).find('input[name=tmp_output_rna_seq').val().slice(0,-1));
+                        }
+
+                        if ($('#trget_virus').val() == 'CV2'){
+                            if ($('#virus_mut_nm').val() == ''){
+                                alert('Choose a virus variant.');
+                                return;
+                            }
+
+                            if ($('#domain_nm').val() == ''){
+                                alert('Select a domain name.');
+                                return;
+                            }
+                        } else {
+                            //바이러스 변이명과 도메인 명은 초기화 한다.
+                            $('#virus_mut_nm').append(`<option value="-">Select mutation</option>`)
+                            $('#domain_nm').val('-');
+                        }
+                        if ($('#input_virus_seq_1').val() == '' || $('#output_virus_seq_1').val() == ''){
+                            alert('Enter one or more amino acid sequences.');
+                            return;
+                        }
+
+                        if ($('#chk_public_yn').is(':checked')) $('#public_yn').val('N')
+                        else $('#public_yn').val('Y')
+                        $('#prdctnForm').submit();
+                    } else {
+                        CommonUtils.downloadText($.trim($('#output_virus_seq_1').val()),'AA_DATA','fasta');
+                    }
+                {% else %}
+                    alert('Analysis is available after logging into the site.');
+                {% endif %}
+
+            }
+
+            //예측 단백체 구분별 화면 구성을 변경한다.
+            var chgPrdtcn = function(selObj){
+                if ('MN' == $(selObj).val()){
+                    //단일체일 경우 output virus만 보이도록 한다.
+                    $('#liOutputSeq').removeClass('half');
+                    $('#liHostSeq').removeClass('half').removeClass('end');
+                    $('#liHostSeq').hide();
+
+                } else if ('MT' == $(selObj).val()){
+                    //복합체일 경우 host virus도 보이도록 한다.
+                    $('#liOutputSeq').addClass('half');
+                    $('#liHostSeq').addClass('half').addClass('end');
+                    $('#liHostSeq').show();
+                }
+            }
+
+            //Input Sequencing 선택 영역 이벤트 처리
+            var selectionTextArea = function(txtObj){
+                let divParent = $(txtObj).parent();
+                let objIdx = $(divParent).attr('id').replace(/[^0-9]/g,'');
+                
+                let divAaInfo = $('#divAaInfo_' + objIdx);
+
+                let selStart = txtObj.selectionStart;
+                let selEnd = txtObj.selectionEnd;
+
+                //전체 배경 초기화
+                $('span.num').css('background-color','#fff');
+
+                if (selStart != selEnd){
+                    for (var i=selStart; i<selEnd; i++){
+                        $(divAaInfo).find('span.num:contains('+ (i+1) +')').filter((idx,obj)=>{return $(obj).text() == (i+1)}).css('background-color','blue');
+                    }
+                }
+            }
+
+            //대상 바이러스 변경 이벤트
+            const chgTargetVirus = function(obj){
+                if ($(obj).val() == 'ALL'){
+                    $('#fontDemo2').hide(100);
+                    $('#virus_mut_nm').hide();
+                    $(obj).css('width','100%');
+                    $('#liDomain').hide();
+                    $('#divInputSeq_1').find('input[name=tmp_input_seq]').css('width','90%');
+                    $('#divInputSeq_1').find('button').show();
+                } else {
+                    let tmpBool = true;
+                  
+                    $('input[name=tmp_input_seq]').attr("readonly", true);
+
+                    if ($('#divInputSeq_1').find('input[name=tmp_input_seq]').val() != '')
+                        if (confirm('대상 바이러스를 변경하면 입력된 모든 정보가 초기화됩니다.\n변경하시겠습니까?')) tmpBool = true
+                        else tmpBool = false;
+
+                    if (tmpBool){
+                        
+                        $('#fontDemo2').show(100);
+                        $(obj).css('width','50%');
+                        $('#virus_mut_nm').show();
+
+                        //변종 정보를 조회한다.
+                        CommonUtils.ajaxJsonDef('/common/get_comm_code_list',{cl_code : $('#trget_virus').val()},'GET').then(data => {
+                            //select box를 초기화 한다.
+                            $('#virus_mut_nm').children().remove();
+                            arrCode = data.code_list;
+
+                            $('#virus_mut_nm').append(`<option value="">Select VOC</option>`)
+
+                            arrCode.map((val, idx) => {
+                                $('#virus_mut_nm').append(`<option value="${val.code}">${val.code_nm}</option>`)
+                            });
+                            
+                        });
+                        
+                        $('#divInputSeq_1').find('button').hide();
+                        $('#divInputSeq_1').find('input[name=tmp_input_seq]').css('width','100%');
+                        //삭제버튼 갯수만큼 삭제 이벤트를 발생한다.
+                        $('.delBtn').each(function(){
+                            delInputSeq(this);
+                        });
+                    }
+
+                }
+            }
+
+            //대상바이러스 변이명 변경 이벤트
+            const chgVirusMutNm = function(obj){
+                if ($(obj).val() != '') {
+                    $('#liDomain').show();
+                }
+                
+                //우한일경우 변이 생성 및 비교가 가능하도록하여 문구 숨김 이벤트
+                if($(obj).val() == "WH"){
+                    $('#fontDemo2').hide(100);
+                }else{
+                    $('#fontDemo2').show(100);
+                }
+            }
+
+            //데모정보를 입력한다
+            const inputDemo = function(){
+                let idx = 0;
+                //데모관련 내용 보이기
+                _demoYn = 'Y'
+                $('#fontDemo1').show(100);
+
+                let demoInterval = setInterval(function(){
+                    ++idx;
+                    if (idx == 1) {
+                        //project name 입력
+                        $('#prdctn_sj').focus();
+                        $('#prdctn_sj').val('BA.5_RBM Demo Prediction');
+                    } else if (idx == 2) {
+                        //target virus 입력
+                        $('#trget_virus').focus();
+                        $('#trget_virus').val('CV2');
+                        $('#trget_virus').css('width','50%');
+                    } else if (idx == 3) {
+                        $('#virus_mut_nm').append(`<option value="OM5">Omicron(BA.5)</option>`)
+                        $('#virus_mut_nm').show(100);
+                        $('#virus_mut_nm').focus();
+                    } else if (idx == 4) {
+                        //화면정리
+                        $('#divInputSeq_1').find('button').hide(100);
+                        $('#divInputSeq_1').find('input[name=tmp_input_seq]').css('width','100%');
+                        $('#fileFastA').parent().parent().hide(100);
+                        //input virus seq 입력
+                        $('#divInputSeq_1').find('input[name=tmp_input_seq]').focus();
+                        $('#divInputSeq_1').find('input[name=tmp_input_seq]').val('NSNNLDSKVGGNYNYLYRLFRKSNLKPFERDISTEIYQAGSTPCNGVEGFNCYFPLQSYGFQPTNGVGYQPY');
+                    } else if (idx == 5) {
+                        //input virus seq 입력
+                        $('#fontDemo2').show(100);
+                    } else if (idx == 6) {
+                        //output virus seq 입력
+                        $('#divOutputSeq_1').find('input[name=tmp_output_seq]').focus();
+                        $('#divOutputSeq_1').find('input[name=tmp_output_seq]').val('NSNNLDSKVGGNYNYLYRLFRKSNLKPFERDISTEIYQAGSTPCNGVEGFNCYFPLQSYGFQPTNGVGYQPY');
+                    } else {
+                        $('#btnServer').focus();
+                        $('#btnServer').animate( {
+                            width: 250,
+                          }, 100, function() {
+                            $(this).animate( {
+                                width: 200
+                            }, 100 );
+                        });
+                    }
+
+                }, 700);
+            }
+        </script>
+    {% endblock %}
+
+    {% block ContentContainer %}
+    <div class="container participation">
+        <div class="subVisual inquiry">
+            <div class="mv_content">
+                <div class="text_area">
+                    <span>Prediction</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 제목 시작 -->
+        {% block titleArea %}
+            <div class="title_area">
+                <span>Virus</span>
+            </div>
+        {% endblock %}
+        <!-- //제목 종료 -->
+        
+        <!-- 내용 시작 -->
+        {% block mainContent%}
+            <div class="participation_box board_area">
+                <!--List-->
+                <form id="demoForm" name="demoForm" action="{% url 'aive:prdctn_list' %}" method="GET">
+                    <input type="hidden" id="demo_yn" name="demo_yn" />
+                </form>
+                <!-- Main -->
+                <form id="prdctnForm" name="prdctnForm" action="{% url 'aive:prdctn_insert' %}" method="POST">
+                    <input type="hidden" id="input_virus_seq_1"  name="input_virus_seq_1"  />
+                    <input type="hidden" id="input_virus_seq_2"  name="input_virus_seq_2"  />
+                    <input type="hidden" id="input_virus_seq_3"  name="input_virus_seq_3"  />
+                    <input type="hidden" id="input_virus_seq_4"  name="input_virus_seq_4"  />
+                    <input type="hidden" id="input_virus_seq_5"  name="input_virus_seq_5"  />
+                    <input type="hidden" id="input_virus_seq_6"  name="input_virus_seq_6"  />
+                    <input type="hidden" id="input_virus_seq_7"  name="input_virus_seq_7"  />
+                    <input type="hidden" id="input_virus_seq_8"  name="input_virus_seq_8"  />
+                    <input type="hidden" id="output_virus_seq_1" name="output_virus_seq_1"  />
+                    <input type="hidden" id="output_virus_seq_2" name="output_virus_seq_2"  />
+                    <input type="hidden" id="output_virus_seq_3" name="output_virus_seq_3"  />
+                    <input type="hidden" id="output_virus_seq_4" name="output_virus_seq_4"  />
+                    <input type="hidden" id="output_virus_seq_5" name="output_virus_seq_5"  />
+                    <input type="hidden" id="output_virus_seq_6" name="output_virus_seq_6"  />
+                    <input type="hidden" id="output_virus_seq_7" name="output_virus_seq_7"  />
+                    <input type="hidden" id="output_virus_seq_8" name="output_virus_seq_8"  />
+                    <input type="hidden" id="output_virus_rna_seq_1" name="output_virus_rna_seq_1"  />
+                    <input type="hidden" id="output_virus_rna_seq_2" name="output_virus_rna_seq_2"  />
+                    <input type="hidden" id="output_virus_rna_seq_3" name="output_virus_rna_seq_3"  />
+                    <input type="hidden" id="output_virus_rna_seq_4" name="output_virus_rna_seq_4"  />
+                    <input type="hidden" id="output_virus_rna_seq_5" name="output_virus_rna_seq_5"  />
+                    <input type="hidden" id="output_virus_rna_seq_6" name="output_virus_rna_seq_6"  />
+                    <input type="hidden" id="output_virus_rna_seq_7" name="output_virus_rna_seq_7"  />
+                    <input type="hidden" id="output_virus_rna_seq_8" name="output_virus_rna_seq_8"  />
+                    <input type="hidden" id="trget_seq_rgin_st_lc"  name="trget_seq_rgin_st_lc"  />
+                    <input type="hidden" id="trget_seq_rgin_end_lc"  name="trget_seq_rgin_end_lc"  />
+                    <input type="hidden" id="input_virus_rna_seq"  name="input_virus_rna_seq"  />
+                    <input type="hidden" id="domain_nm" name="domain_nm" />
+
+                {% csrf_token %}
+                {% if prdctnForm.errors%}
+                <div class="alert alert-danger">
+                    {% for field in prdctnForm %}
+                    <!--필드 오류-->
+                    {% if field.errors %}
+                    <div>
+                        <strong>{{field.label }}</strong>
+                        {{ field.errors}}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    <!-- 넌필드 오류 -->
+                    {% for error in prdctnForm.non_field_errors %}
+                    <div>
+                        <strong>{{ error }}</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+        
+                <div class="participate_area">
+                    <div class="participate_area">
+                        <div id="helpPopup">
+                            <p class="pop_text"></p>
+                        </div>
+                        <ul class="input_list">
+                            <li class="alive-stp">
+                                <span>Project name <a class="btn_compare" href="javascript:inputDemo();">DEMO</a><font id="fontDemo1" style="margin-left:5px;font-size:15px; color:red;display:none;">   The following shows an example of how to run AIVE using the sample data (BA.5_RBM)</font></span>
+                                <div class="input_area">
+                                    <input type="text" id="prdctn_sj" name="prdctn_sj" class="vt_inp" style="width:100%;margin-bottom: 0.5em;"/>
+                                </div>
+                            </li>
+                            <li class="alive-stp">
+                                <span>Target virus
+                                    <img class="help_pop" src="/static/img/sub/ico_help.png" alt="help" style="display: inline">
+                                    <span style="display:none">
+                                        select the virus that the user wants to check. If not on the list, select All Viruses
+                                    </span>
+                                </span>
+                                <div class="input_area">
+                                    <select id="trget_virus" name="trget_virus" onchange="chgTargetVirus(this);" class="search_inp" style="width:100%;">
+                                        {% for commCode in prdctnForm.virus_list %}
+                                            <option value="{{ commCode.code }}">{{ commCode.code_dc }}</option>
+                                        {% endfor%}
+                                    </select>
+                                    <select id="virus_mut_nm" name="virus_mut_nm" class="search_inp" onchange="chgVirusMutNm(this)" style="display:none; margin-left: 1%; width:49%;">
+                                    </select>
+                                </div>
+                            </li>
+                            <li id="liDomain" style="display:none; border: 0;">
+                                <div> 
+                                    <table id="tblDomain" width="0" border="0" cellspacing="0" cellpadding="0"> 
+                                    <tbody> 
+                                        <tr>
+                                            <td style="width:288px;border:0px;"><img src="/static/img/sub/covid_01.gif"   alt="" id="covid_01" data-domain="ORF1ab"></td>
+                                            <td style="width:168px; border:0px;"><img src="/static/img/sub/covid_02.gif"   alt="" id="covid_02" data-domain="SB"></td>
+                                            <td style="width:75px"><img src="/static/img/sub/covid_03.gif"   alt="" id="covid_03" data-domain="ORF3a"></td>
+                                            <td style="width:75px"><img src="/static/img/sub/covid_04.gif"   alt="" id="covid_04" data-domain="E"></td>
+                                            <td style="width:75px"><img src="/static/img/sub/covid_05.gif"   alt="" id="covid_05" data-domain="M"></td>
+                                            <td style="width:75px"><img src="/static/img/sub/covid_06.gif"   alt="" id="covid_06" data-domain="ORF6"></td>
+                                            <td style="width:75px"><img src="/static/img/sub/covid_07.gif"  alt="" id="covid_07" data-domain="ORF7a"></td>
+                                            <td style="width:75px"><img src="/static/img/sub/covid_08.gif"   alt="" id="covid_08" data-domain="ORF7b"></td>
+                                            <td style="width:75px"><img src="/static/img/sub/covid_09.gif"   alt="" id="covid_09" data-domain="ORF8"></td>
+                                            <td style="width:101px"><img src="/static/img/sub/covid_10.gif"   alt="" id="covid_10" data-domain="NB"></td>
+                                            <td style="width:76px"><img src="/static/img/sub/covid_11.gif"   alt="" id="covid_11" data-domain="ORF10"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="11" style="width:588px;border:0px;"><img src="/static/img/sub/covid_12.png" id="covid_12" width="1158" height="79" alt=""/></td>
+                                        </tr>
+                                    </tbody>
+                                    </table>
+                                </div>
+                            </li>
+                            <li id="liSubDomain" style="display:none;">
+                                <div id="divORF1abSub" class="covid-box" style="width:100%;height:100%;"></div>
+                                <div id="divSBSub" class="covid-box" style="width:100%;height:100%;"></div>
+                                <div id="divNBSub" class="covid-box" style="width:100%;height:100%;"></div>
+                            </li>
+                            <li class="alive-stp" style="display:none;">
+                                <span>Prediction protein structure</span>
+                                <div class="input_area">
+                                    <select id="prdctn_protein_struct" name="prdctn_protein_struct" onchange="chgPrdtcn(this);" class="search_inp">
+                                        {% for commCode in prdctnForm.comm_code_list %}
+                                            <option value="{{ commCode.code }}">{{ commCode.code_dc }}</option>
+                                        {% endfor%}
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="alive-stp stp1">
+                                <span>Input virus Sequence</span>
+                                <font style="margin-left:5px;font-size:15px;">   ※ The length range for sequences that are covered is between 16 and 2700.</font>
+                                
+                                <div id="divInputSeq" class="input_area">
+                                    <div id="divInputSeq_1" style="width:100%;">
+                                        <input type="text" name="tmp_input_seq" class="vt_inp" style="width:90%;margin-bottom: 0.5em;" minlength="16" maxlength="2700" onkeyup="keypupInputSeq(this)" onclick="selectionTextArea(this);"/>
+                                        <button type="button" class="adddel" onclick="addInputSeq(this);">+ Add</button>
+                                        <button type="button" class="adddel delBtn" onclick="delInputSeq(this);">- Del</button>
+                                    </div>
+                                </div>
+                                <div class="input_area" style="margin:0px;display:block;text-align:right;">
+                                    <label for="fileFastA" class="fileUpload" style="width:150px;display:inline-block;">
+                                        <span>Upload fasta file</span>
+                                        <input type="file" id="fileFastA" name="fileFastA" class="inp_file" accept=".FASTA" onchange="loadFile(this.files[0], 'virus')"/>
+                                    </label>
+                                </div>
+                            </li>
+                            <!-- Alignment -->
+                            <li class="alive-stp stp2">
+                                <span>Alignment
+                                    <img class="help_pop" src="/static/img/sub/ico_help.png" alt="help" style="display: inline;">
+                                    <span style="display:none;">
+                                        To generate mutations in Protein sequence, click on the corresponding location, and select one from 20 amino acids.
+                                    </span>
+                                    <font id="fontDemo2" style="margin-left:5px;font-size:15px; color:red;display:none;">   Unable to select alignment when selecting Demo and VOCs</font>
+                                </span>
+                                <div class="input_area">
+                                    <div id="divAaInfo" class="alignment-area">
+                                        <div id="divAaInfo_1" class="am-list-row">
+                                        </div>
+                                    </div>
+        
+                                    <!-- 범례 -->
+                                    <div class="legend-box">
+                                        <table class="tbl-list tbl-legend">
+                                            <colgroup>
+                                                <col style="width: 60%" />
+                                                <col />
+                                            </colgroup>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">
+                                                        Amino acids with electriccally charged side chain_negative
+                                                    </th>
+                                                    <td>
+                                                        <span class="spanAa color color01">R</span>
+                                                        <span class="spanAa color color02">H</span>
+                                                        <span class="spanAa color color03">K</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">
+                                                        Amino acids with electriccally charged side chain_positive
+                                                    </th>
+                                                    <td>
+                                                        <span class="spanAa color color04">D</span>
+                                                        <span class="spanAa color color05">E</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">
+                                                        Amino acids with Polar uncharged side chain
+                                                    </th>
+                                                    <td>
+                                                        <span class="spanAa color color06">S</span>
+                                                        <span class="spanAa color color07">T</span>
+                                                        <span class="spanAa color color08">N</span>
+                                                        <span class="spanAa color color09">Q</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">Special cases</th>
+                                                    <td>
+                                                        <span class="spanAa color color10">C</span>
+                                                        <span class="spanAa color color11">G</span>
+                                                        <span class="spanAa color color12">P</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">
+                                                        Amino acids with hydrophobic side chain
+                                                    </th>
+                                                    <td>
+                                                        <span class="spanAa color color13">A</span>
+                                                        <span class="spanAa color color14">V</span>
+                                                        <span class="spanAa color color15">I</span>
+                                                        <span class="spanAa color color16">L</span>
+                                                        <span class="spanAa color color17">M</span>
+                                                        <span class="spanAa color color18">F</span>
+                                                        <span class="spanAa color color19">Y</span>
+                                                        <span class="spanAa color color20">W</span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="alive-stp stp2">
+                                <span>Keep private
+                                    <img class="help_pop" src="/static/img/sub/ico_help.png" alt="help" style="display: inline;">
+                                    <span style="display:none;">
+                                        Select this option if you want your job hidden from the public.
+                                    </span>
+                                    <input type="hidden" name="public_yn" id="public_yn" value="N" />
+                                    <input type="checkbox" name="chk_public_yn" id="chk_public_yn" checked="checked" />
+                                </span>
+                            </li>
+                            <li id="liOutputSeq" class="alive-stp stp3">
+                                <span>Variants protein sequence</span>
+                                <div id="divOutputSeq" class="input_area">
+                                    <div id="divOutputSeq_1" style="width:100%;">
+                                        <input type="text" name="tmp_output_seq" class="vt_inp" style="width:88%;margin-bottom: 0.5em;" readonly="readonly"/>
+                                        <input type="hidden" name="tmp_output_rna_seq" />
+                                        <button type="button" class="adddel" onclick="copyText(this);">Copy Clipboard</button>
+                                    </div>
+                                </div>
+                            </li>
+        
+                            <li id="liHostSeq" class="alive-stp stp3" style='display: none;'>
+                                <span>host Sequence</span>
+                                <div class="input_area">
+                                    <button type="button" class="copyText">Copy Clipboard</button>
+                                    <textarea id="host_virus_seq_2" name="host_virus_seq_2" class="vt_inp"></textarea>
+                                    <label for="fileUpload2" class="fileUpload">
+                                        <span>Upload fasta file</span>
+                                        <input type="file" name="ipt2" id="fileUpload2" class="inp_file" accept=".FASTA" onchange="loadFile(this.files[0], 'virus')"/>
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+        
+                    <div class="vt_btn_area">
+                        <a id="btnServer" href="javascript:runPrdctn('server');" class="btn vt2" style="width:200px;margin-right:40px;">Server Prediction</a>
+                    </div>
+                
+        
+                    <!-- 아미노산 -->
+                    <div id="divSelAa" class="am-list-col" style="display:none;">
+                        
+                        <span class="spanAa color color01" data-aa="R">
+                            R
+                            <div id="divR" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('01', 'CGT')">CGT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('01', 'CGC')">CGC</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('01', 'CGA')">CGA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('01', 'CGG')">CGG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color02" data-aa="H">
+                            H
+                            <div id="divH" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('02', 'CAT');">CAT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('02', 'CAC');">CAC</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color03" data-aa="K">
+                            K
+                            <div id="divK" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('03', 'AAA');">AAA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('03', 'AAG');">AAG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color04" data-aa="D">
+                            D
+                            <div id="divD" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('04', 'GAT');">GAT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('04', 'GAC');">GAC</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color05" data-aa="E">
+                            E
+                            <div id="divE" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('05', 'GAA');">GAA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('05', 'GAG');">GAG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color06" data-aa="S">
+                            S
+                            <div id="divS" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('06', 'TCT');">TCT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('06', 'TCC');">TCC</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('06', 'TCA');">TCA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('06', 'TCG');">TCG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color07" data-aa="T">
+                            T
+                            <div id="divT" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('07', 'ACT');">ACT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('07', 'ACC');">ACC</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('07', 'ACA');">ACA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('07', 'ACG');">ACG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color08" data-aa="N">
+                            N
+                            <div id="divN" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('08', 'AAT');">AAT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('08', 'AAC');">AAC</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color09" data-aa="Q">
+                            Q
+                            <div id="divQ" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('09', 'CAA');">CAA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('09', 'CAG');">CAG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color10" data-aa="C">
+                            C
+                            <div id="divC" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('10', 'TGT');">TGT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('20', 'TGC');">TGC</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color11" data-aa="G">
+                            G
+                            <div id="divG" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('11', 'GGT');">GGT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('11', 'GGC');">GGC</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('11', 'GGA');">GGA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('11', 'GGG');">GGG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color12" data-aa="P">
+                            P
+                            <div id="divP" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('12', 'CCT');">CCT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('12', 'CCC');">CCC</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('12', 'CCA');">CCA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('12', 'CCG');">CCG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color13" data-aa="A">
+                            A
+                            <div id="divA" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('13', 'GCT');">GCT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('13', 'GCC');">GCC</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('13', 'GCA');">GCA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('13', 'GCG');">GCG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color14" data-aa="V">
+                            V
+                            <div id="divV" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('14', 'GTT');">GTT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('14', 'GTC');">GTC</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('14', 'GTA');">GTA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('14', 'GTG');">GTG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color15" data-aa="I">
+                            I
+                            <div id="divI" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('15', 'ATT');">ATT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('15', 'ATC');">ATC</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('15', 'ATA');">ATA</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color16" data-aa="L">
+                            L
+                            <div id="divL" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('16', 'CTT');">CTT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('16', 'CTC');">CTC</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('16', 'CTA');">CTA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('16', 'CTG');">CTG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color17" data-aa="M">
+                            M
+                            <div id="divM" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('17', 'ATG');">ATG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color18" data-aa="F">
+                            F
+                            <div id="divF" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('18', 'TTT');">TTT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('18', 'TTC');">TTC</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('18', 'TTA');">TTA</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('18', 'TTG');">TTG</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color19" data-aa="Y">
+                            Y
+                            <div id="divY" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('19', 'TAT');">TAT</a></span>
+                                <span class="ncleo"><a href="javascript:clickAa('19', 'TAC');">TAC</a></span>
+                            </div>
+                        </span>
+                        <span class="spanAa color color20" data-aa="W">
+                            W
+                            <div id="divW" class="ncleoBox">
+                                <div class="ncleoTit">Select codon</div>
+                                <span class="ncleo"><a href="javascript:clickAa('20', 'TGG');">TGG</a></span>
+                            </div>
+                        </span>
+                    </div>
+                    <!-- //아미노산 -->
+                    </form>
+                </div>
+                <!--//메인 콘텐츠 -->
+        {% endblock %}
+        <!-- //내용 종료 -->
+    </div>
+    {% endblock %}
+

@@ -1,0 +1,184 @@
+	{% extends './layout/common_layout.html' %}
+
+	{% block head%}
+		<style>
+			table thead th, table thead td {
+				padding: 5px 10px;
+				font-weight: bold;
+			  }
+			  table tbody td, table tbody th {
+				color: #fff;
+				position: relative;
+				padding: 10px 25px;
+			  }
+			  table tbody td:before, table tbody th:before {
+				content: '';
+				position: absolute;
+				top: 5px;
+				left: 0;
+				right: 0;
+				bottom: 5px;
+				background: #F4A460;
+				z-index: -2;
+			  }
+			  table tbody.blue th:before, table tbody.blue td:before {
+				background: #4AB34A;
+			  }
+			  table tbody td {
+				color: #000;
+			  }
+			  table tbody td:after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 10px;
+				right: 10px;
+				bottom: 0px;
+				background: rgba(200, 200, 200, 0.9);
+				z-index: -1;
+			  }
+			  table tbody th:before {
+				border-radius: 5px 0 0 5px;
+				left: 5px;
+			  }
+			  table tbody td:last-child:before {
+				border-radius: 0 5px 5px 0;
+			  }
+			  table tbody th:after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 0;
+				bottom: 0;
+				border-left: 1px solid red;
+			  }
+			  table tbody tr:first-child th:after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 50%;
+				border-top: 1px solid red;
+			  }
+			  table tbody tr:last-child th:after {
+				bottom: 5px;
+			  }
+			  
+			  .details {
+				color: green;
+			  }
+			  .tmpTd {
+				border:1px solid #FFF;
+			  }
+		</style>
+		<script type="text/javascript">
+			const popCitation = function(url){
+				window.open(url);
+			}
+		</script>
+	{% endblock %}
+
+
+	<!-- 컨텐츠 컨테이너 시작-->
+	<!-- 컨텐츠 컨테이너 시작-->
+    {% block ContentContainer %}
+    <div class="container participation">
+        <div class="subVisual inquiry noprint">
+            <div class="mv_content">
+                <div class="text_area">
+                    <span>Sitemap</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 제목 시작 -->
+        {% block titleArea %}
+        <div class="title_area">
+            <span>Sitemap</span>
+        </div>
+        {% endblock %}
+        <!-- //제목 종료 -->
+        
+        <!-- 내용 시작 -->
+        
+        {% block mainContent%}
+        <!-- Main -->
+		<div class="participation_box board_area">
+			<!-- info input -->
+			<div class="participate_area sars">
+				<div class="vt_btn_area" style="margin-top:0;z-index:99;" id="helpPopup">
+					<div class="input_area private">
+						<p class="pop_text"></p>
+					</div>
+				</div>
+				<ul class="input_list">
+					<li class="alive-stp stp2" style="padding-top:30px;">
+						<div class="input_area">
+							<!-- 범례 -->
+							<div class="legend-box">
+
+								<table cellpadding="0" cellspacing="0">
+									<colgroup>
+										<col style="width: 20%"/>
+										<col />
+										<col style="width: 30%" />
+									</colgroup>
+									<thead>
+										<tr>
+											<td style="border:none"></td>
+											<td style="border:none"> Description</td>
+											<td style="border:none">Url</td>
+									  	</tr>
+									</thead>
+									<tbody>
+									  	<tr>
+											<th scope="row" style="height:70px;border:none">Home</th>
+											<td style="text-align:left;padding-left:20px;border:none">Shows summary and introduces AIVE</td>
+											<td style="text-align:left;padding-left:20px;border:none"><a href="http://ai-ve.org/" class="sitemapA">http://ai-ve.org/</a> </td>
+									  	</tr>
+										<tr>
+										  <th scope="row" style="height:70px;border:none">Prediction-local</th>
+										  <td style="text-align:left;padding-left:20px;border:none">Submit Amino Acid sequence that the user wants to predict. Protein prediction uses AlphaFold2  </td>
+										  <td style="text-align:left;padding-left:20px;border:none"><a href="http://ai-ve.org/prdctn_regist_server" class="sitemapA">http://ai-ve.org/prdctn_regist_server</a> </td>
+										</tr>
+										<tr>
+											<th scope="row" style="height:70px;border:none">Prediction-colab</th>
+											<td style="text-align:left;padding-left:20px;border:none">Submit Amino Acid sequence that the user wants to predict. Protein prediction uses AlphaFold Colab</td>
+											<td style="text-align:left;padding-left:20px;border:none"><a href="http://ai-ve.org/prdctn_regist_colab" class="sitemapA">http://ai-ve.org/prdctn_regist_colab</a> </td>
+										</tr>
+										<tr>
+											<th scope="row" style="height:70px;border:none">Report-list</th>
+											<td style="text-align:left;padding-left:20px;border:none">Provides the submitted job list, status, and result report page link</td>
+											<td style="text-align:left;padding-left:20px;border:none"><a href="http://ai-ve.org/prdctn_list" class="sitemapA">http://ai-ve.org/prdctn_list</a> </td>
+										</tr>
+										<tr>
+											<th scope="row" style="height:70px;border:none">Report-result viewer</th>
+											<td style="text-align:left;padding-left:20px;border:none">Receives results file</td>
+											<td style="text-align:left;padding-left:20px;border:none"><a href="http://ai-ve.org/aive_result_viewer" class="sitemapA">http://ai-ve.org/aive_result_viewer</a> </td>
+										</tr>
+										<tr>
+											<th scope="row" style="height:70px;border:none">About</th>
+											<td style="text-align:left;padding-left:20px;border:none">Displays the citation, license, and browser compatibility of programs</td>
+											<td style="text-align:left;padding-left:20px;border:none"><a href="http://ai-ve.org/aive_about" class="sitemapA">http://ai-ve.org/aive_about</a> </td>
+										</tr>
+										<tr>
+											<th scope="row" style="height:70px;border:none">Tutorial</th>
+											<td style="text-align:left;padding-left:20px;border:none">Provides tutorial of AIVE</td>
+											<td style="text-align:left;padding-left:20px;border:none"><a href="http://ai-ve.org/aive_tutorial" class="sitemapA">http://ai-ve.org/aive_tutorial</a> </td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+        {% endblock %}
+    </div>
+    {% endblock %}
+
+	
+
+
