@@ -36,6 +36,6 @@ Displays the citation, license, and browser compatibility of programs (http://ai
 ##### tutorial: 
 Provides tutorial of AIVE (http://ai-ve.org/aive_tutorial)
 ##### Template program: 
-Provide a prominent link to the template program (https://github.com/honglab-AIVE/AIVE_github)
+Provide a prominent link to the template program (https://github.com/Honglab-Research/AIVE)
 ##### Required library
 python > 3.9 django==4.0.3 django-apschedluer django-dubug-toolbar pandas seaborn openpyxl scikit-learn requests
