@@ -325,6 +325,18 @@ def get_apess_result(request):
         output_virus_info = VirusSeqInfo.objects.filter(virus_cd = prdctn_info.trget_virus, virus_mut_nm = prdctn_info.virus_mut_nm, domain_nm = prdctn_info.domain_nm)
         output_rna_seq = output_virus_info[0].rna_seq
         
+        #WH 바이러스 일때는 사용자가 입력한 ouput rna seq 변이를 반영하도록 한다.
+        if prdctn_info.virus_mut_nm == 'WH':
+            arr_output_rna_seq = prdctn_info.output_virus_rna_seq_1.split(',')
+            tmp_rna_seq = ''
+            for idx, rna_seq in enumerate(arr_output_rna_seq):
+                if rna_seq != '':
+                    tmp_rna_seq += rna_seq
+                else:
+                    tmp_rna_seq += output_rna_seq[(idx*3): (idx*3) + 3]
+                
+            output_rna_seq = tmp_rna_seq
+
         pae = request.POST.get('pae')
         plddt = request.POST.get('plddt')
         apess_utils = ApessUtils()
