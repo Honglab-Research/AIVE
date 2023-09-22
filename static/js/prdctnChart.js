@@ -124,7 +124,9 @@ class PrdctnChart {
                     }
                 }
             },
-
+            credits: {
+                enabled: false
+            },
             title: {
                 text: 'Predicted Aligned Error'
             },
@@ -337,6 +339,9 @@ class PrdctnChart {
             chart: {
                 zoomType: 'x'
             },
+            credits: {
+                enabled: false
+            },
             title: {
                 text: 'Predicted LDDT'
             },
@@ -410,6 +415,9 @@ class PrdctnChart {
             chart: {
                 zoomType: 'x',
                 type: 'area'
+            },
+            credits: {
+                enabled: false
             },
             title: {
                 text: 'Predicted LDDT'
@@ -509,7 +517,9 @@ class PrdctnChart {
             chart: {
                 type: 'boxplot'
             },
-
+            credits: {
+                enabled: false
+            },
             title: {
                 text: 'pLDDT box-plot'
             },
@@ -612,7 +622,9 @@ class PrdctnChart {
             chart: {
                 type: 'boxplot'
             },
-
+            credits: {
+                enabled: false
+            },
             title: {
                 text: 'box-plot'
             },
@@ -662,7 +674,9 @@ class PrdctnChart {
             chart: {
                 type: 'boxplot'
             },
-
+            credits: {
+                enabled: false
+            },
             title: {
                 text: 'box-plot'
             },
@@ -873,7 +887,9 @@ class PrdctnChart {
             title: {
                 text: 'PPX4, PPX5, BLCR, CPES, APESS'
             },
-        
+            credits: {
+                enabled: false
+            },
             yAxis: {
                 title: {
                     text: 'Values'
@@ -940,6 +956,9 @@ class PrdctnChart {
         Highcharts.chart(this.targetId, {
             chart: {
                 zoomType: 'xy'
+            },
+            credits: {
+                enabled: false
             },
             title: {
                 text: '',
@@ -1018,6 +1037,9 @@ class PrdctnChart {
         Highcharts.chart(this.targetId, {
             chart: {
                 zoomType: 'xy'
+            },
+            credits: {
+                enabled: false
             },
             title: {
                 text: '',
@@ -1159,6 +1181,9 @@ class PrdctnChart {
             chart: {
                 type: 'column'
             },
+            credits: {
+                enabled: false
+            },
             title: {
                 text: ''
             },
@@ -1207,6 +1232,9 @@ class PrdctnChart {
         Highcharts.chart(this.targetId, {
             chart: {
                 type: 'area',
+            },
+            credits: {
+                enabled: false
             },
             title: {
                 text: ''
@@ -1279,6 +1307,9 @@ class PrdctnChart {
             title: {
                 text: ''
             },
+            credits: {
+                enabled: false
+            },
             yAxis: {
                 labels: {
                     format: '{value:.2f}'
@@ -1349,7 +1380,9 @@ class PrdctnChart {
             title: {
                 text: ''
             },
-        
+            credits: {
+                enabled: false
+            },
             yAxis: {
                 title: {
                     text: 'Values'
@@ -1411,6 +1444,9 @@ class PrdctnChart {
         Highcharts.chart(this.targetId, {
             chart: {
                 zoomType: 'xy'
+            },
+            credits: {
+                enabled: false
             },
             title: {
                 text: '',
@@ -1538,11 +1574,16 @@ class PrdctnChart {
             return sum + currVal;
         });
 
-        apess_sum = apess_sum/10;
+        //20230922 최원종 연구원 요청으로 /10 제거
+        //apess_sum = apess_sum/10;
+        apess_sum = apess_sum;
 
         Highcharts.chart(this.targetId, {
             chart: {
                 type:'spline'
+            },
+            credits: {
+                enabled: false
             },
             title: {
                 text: 'Amino acid Property Eigen Selection Score'
@@ -1621,9 +1662,9 @@ class PrdctnChart {
                 style: { // text style
                     color: 'white'
                 },
-                y:-200,
+                y:-250,
                 data: [
-                    { x: apess_sum, text: 'Mutation', title: 'Mutation'},
+                    { x: apess_sum , text: 'Mutation', title: 'Mutation'},
                 ],
                 showInLegend: false
             },
@@ -1632,12 +1673,12 @@ class PrdctnChart {
                 name: 'Highcharts',
                 color: '#333333',
                 shape: 'circlepin',
+                y:-30,
                 data: [
-                    { x: -0.008, text: 'Alpha', title: 'Alpha' },
-                    { x: 2.0, text: 'BA1', title: 'BA1' },
-                    { x: 4.9, text: 'Delta', title: 'Delta' },
-                    { x: 6.4, text: 'BA.5', title: 'BA.5' },
-                    { x: 7.1, text: 'BA.4', title: 'BA.4' },
+                    { x: -0.001312558, text: 'Alpha', title: 'Alpha' },
+                    { x: 1.949547146, text: 'BA1', title: 'BA1' },
+                    { x: 1.640392388, text: 'Delta', title: 'Delta' },
+                    { x: 2.153744188, text: 'BA.5', title: 'BA.5' },
                 ],
                 showInLegend: false
             },
@@ -1646,13 +1687,57 @@ class PrdctnChart {
                 name: 'Highcharts',
                 color: '#333333',
                 shape: 'circlepin',
-                y:-100,
+                y:-60,
                 data: [
-                    { x: -0.068,  text: 'Beta', title: 'Beta' },
-                    { x: 2.0, text: 'BA2', title: 'BA2' },
+                    { x: 2.052704741, text: 'BA2', title: 'BA2' },
                 ],
                 showInLegend: false
-            }
+            },
+            {
+                type: 'flags',
+                name: 'Highcharts',
+                color: '#333333',
+                shape: 'circlepin',
+                y:-90,
+                data: [
+                    { x: 2.153744188, text: 'BA.4', title: 'BA.4' },
+                    { x: 0.006397999,  text: 'Beta', title: 'Beta' },
+                ],
+                showInLegend: false
+            },
+            {
+                type: 'flags',
+                name: 'Highcharts',
+                color: '#333333',
+                shape: 'circlepin',
+                y:-120,
+                data: [
+                    { x: 1.966870792, text: 'XBB', title: 'XBB' },
+                ],
+                showInLegend: false
+            },
+            {
+                type: 'flags',
+                name: 'Highcharts',
+                color: '#333333',
+                shape: 'circlepin',
+                y:-150,
+                data: [
+                    { x: 2.079979966,  text: 'BQ.1', title: 'BQ.1' },
+                ],
+                showInLegend: false
+            },
+            {
+                type: 'flags',
+                name: 'Highcharts',
+                color: '#333333',
+                shape: 'circlepin',
+                y:-180,
+                data: [
+                    { x: 1.926751413, text: 'BA.2.75', title: 'BA.2.75' },
+                ],
+                showInLegend: false
+            },
         ],
         
         });
@@ -1675,7 +1760,9 @@ class PrdctnChart {
                 text: '',
                 align: 'center'
             },
-
+            credits: {
+                enabled: false
+            },
             subtitle: {
                 text: '',
                 align: 'left'
