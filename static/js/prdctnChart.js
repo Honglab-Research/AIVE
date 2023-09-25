@@ -1581,7 +1581,7 @@ class PrdctnChart {
         Highcharts.chart(this.targetId, {
             chart: {
                 type:'spline',
-                zoomType: 'x',
+                zoomType: 'xy',
             },
             credits: {
                 enabled: false
