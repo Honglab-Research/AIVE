@@ -1580,7 +1580,8 @@ class PrdctnChart {
 
         Highcharts.chart(this.targetId, {
             chart: {
-                type:'spline'
+                type:'spline',
+                zoomType: 'x',
             },
             credits: {
                 enabled: false
@@ -1596,6 +1597,7 @@ class PrdctnChart {
             },
             xAxis: {
                 type: 'string',
+                max: 4,
 
                 //plotLines: [{
                     //color: '#FF0000', // Red
@@ -1608,7 +1610,7 @@ class PrdctnChart {
                     to: 8,
                     color: '#FFEFFF',
                     label: {
-                        text: 'Risk',
+                        text: 'Infectivity',
                         style: {
                             color: '#999999',
                             fontSize: '40pt'
