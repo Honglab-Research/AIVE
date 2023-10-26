@@ -307,7 +307,7 @@
                                     <img id="imgid" class="help_pop" src="/static/img/sub/ico_help.png" alt="help" style="display: inline">
                                     <span style="display:none">
                                         SCPS : K-means clustering for each amino acid position with protein structure prediction information(PAE, pLDDT)
-                                        <br/>PS : polarity position information for each amino acid
+                                        <br/>PCS : polarity position information for each amino acid
                                         <br/>MR : evaluation of change rate in frequencies of amino acid sequences and nucleotide sequence
                                         <br/>BPES : evaluation of biochemical properties of amino acid sequences
                                     </span>
@@ -315,9 +315,9 @@
                             </div>
                             <div class="tutorial_expl01" style="margin:0px;">
                                 <ol>
-                                    <li> Protein structure prediction characteristics (SCPS: SubClustering of Protein Structure in ①) and polarity (PS: Polarity Score) are shown. </li>
+                                    <li> Protein structure prediction characteristics (SCPS: SubClustering of Protein Structure in ①) and polarity (PCS: Polarity Change Score) are shown. </li>
                                     <li> SCPS divides the residues constituting the 3D protein structure into several groups using K-means clustering. The indicated groups are those with a high proportion of WHO name variants.</li>
-                                    <li> PS assigns weight to a position having a specific structure (where P appears consecutively) by polarity features of amino acid.</li>
+                                    <li> PCS assigns weight to a position having a specific structure (where P appears consecutively) by polarity features of amino acid.</li>
                                     <li> Ratio change in frequencies of amino acids sequences (mr: mutation rate) and Biochemical properties of amino acid sequencies (bpes: biochemical properties eigen score) are shown. </li>
                                     <li> MR is the rate of change of Amino Acid and its constituent nucleotides; the higher the rate, the higher the rate of change.</li>
                                     <li> BPES measures changes in the biochemical properties of amino acids at the site of a mutation. A high rate of change results in a high BPES value. Biochemical properties are measured by integrating amino acid residue, pH, and hydrophobic information.</li>
@@ -336,9 +336,9 @@
                             </div>
                             <div class="tutorial_expl01" style="margin:0px;">
                                 <ol>
-                                    <li> APESS is an amino acid property eigen selection score calculated by multiplying the values of SCPS, PS, MR, and BPES.</li>
+                                    <li> APESS is an amino acid property eigen selection score calculated by multiplying the values of SCPS, PCS, MR, and BPES.</li>
                                     <li> APESS is a value that integrates the results of ② and ③. The higher the APESS value, the more dangerous the mutation is.</li>
-                                    <li> The graph shows the positions of mutations with structural differences (SCPS, PS) in viral proteins. It also shows the positions and magnitudes of relatively large physical changes (MR) and biochemical changes (BPES).</li>
+                                    <li> The graph shows the positions of mutations with structural differences (SCPS, PCS) in viral proteins. It also shows the positions and magnitudes of relatively large physical changes (MR) and biochemical changes (BPES).</li>
                                 </ol> 
                             </div>
                             <div class="ICn_area" style="width:100%;">

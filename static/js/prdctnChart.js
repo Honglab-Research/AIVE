@@ -1190,7 +1190,7 @@ class PrdctnChart {
             yAxis: [{
                 min: 0,
                 title: {
-                    text: 'ps'
+                    text: 'pcs'
                 },
                 reversed: true
             }, {
@@ -1214,7 +1214,7 @@ class PrdctnChart {
                 }
             },
             series: [{
-                name: 'ps',
+                name: 'pcs',
                 color: 'rgba(0, 234, 255, 0.75)',
                 data: apess.ps,
             }, {

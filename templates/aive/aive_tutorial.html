@@ -39,10 +39,10 @@
 			<div class="tutorial_expl02">
 				<dt>
 					A. Protein structure prediction from viral amino acid sequences<p></p>
-					B. Analysis of repeated polarity in viral amino acid sequences (PS)<p></p>
+					B. Analysis of repeated polarity in viral amino acid sequences (PCS)<p></p>
 					C. Rate of change of mutations for viral genome sequences (MR)<p></p>
 					D. Scoring of amino acid changes based on amino acid properties (BPES)<p></p>
-					E. Intergrative mathematical analysis of protein structure prediction (amino acid clustering), PS, MR, and, BPES
+					E. Intergrative mathematical analysis of protein structure prediction (amino acid clustering), PCS, MR, and, BPES
 				</dt> 
 			</div>
 			<p span class="title_num2">(2) The input range of analysis for AIVE is as follows :
@@ -278,7 +278,7 @@
 			<div class="tutorial_expl02">
 				<dl>
 					<dd>
-						For the amino acid sequence entered by the user, the AIVE system provides a total of 6 evaluation charts. First, AIVE predicts protein structures due to mutations in each gene for coronavirus lineages or sub-lineages. From the predicted result, it carries out grouping of amino acids (components of 3D protein structure) utilizing K-means clustering to report SCPS results. Second, through repeated pattern analysis of polar amino acids in amino acid sequences, AIVE reports PS results. Third, AIVE figures out amino acid properties to measure BPES through measurement of changes in biochemical properties of amino acid. Fourth, AIVE calculates MR through rate of change for nucleotide frequencies due to mutations. Fifth, APESS, the result of comprehensive mathematical model (SCP*PS*MR*BPES) of measured analysis results is provided. Finally, the APESS distribution graph provides risk and spread results of the amino acid sequence entered by the user by comparing to VOCs’ APESS evaluation metric.
+						For the amino acid sequence entered by the user, the AIVE system provides a total of 6 evaluation charts. First, AIVE predicts protein structures due to mutations in each gene for coronavirus lineages or sub-lineages. From the predicted result, it carries out grouping of amino acids (components of 3D protein structure) utilizing K-means clustering to report SCPS results. Second, through repeated pattern analysis of polar amino acids in amino acid sequences, AIVE reports PCS results. Third, AIVE figures out amino acid properties to measure BPES through measurement of changes in biochemical properties of amino acid. Fourth, AIVE calculates MR through rate of change for nucleotide frequencies due to mutations. Fifth, APESS, the result of comprehensive mathematical model (SCP*PCS*MR*BPES) of measured analysis results is provided. Finally, the APESS distribution graph provides risk and spread results of the amino acid sequence entered by the user by comparing to VOCs’ APESS evaluation metric.
 					</dd>
 				</dl>
 			</div>
@@ -303,8 +303,8 @@
 			<div class="tutorial_expl02">
 				<dl>
 					<dd>
-						PS(Polarity Score)<p></p>
-						: PS assigns a weight to a position having a specific structure (where P appears consecutively) through the polarity of amino acid structure information constituting the protein structure.
+						PCS(Polarity Change Score)<p></p>
+						: PCS assigns a weight to a position having a specific structure (where P appears consecutively) through the polarity of amino acid structure information constituting the protein structure.
 					</dd>
 				</dl>
 			</div>
@@ -343,7 +343,7 @@
 				<dl>
 					<dd>
 						APESS<p></p>
-						: APESS is a value that integrates the results of SCPC, PS, BPES, and MR, and the higher the value, the more dangerous the mutation is.
+						: APESS is a value that integrates the results of SCPC, PCS, BPES, and MR, and the higher the value, the more dangerous the mutation is.
 					</dd>
 				</dl>
 			</div>

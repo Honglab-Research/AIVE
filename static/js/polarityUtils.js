@@ -11,8 +11,8 @@ class PolarityUtils {
         this.outputPolarSeq = '';
         this.outputFiveSeq = '';
         //N-N-X, P-P-X외 추가
-        this.dicInputPolar = {'N-N-X' : 0,'N-P-X' : 0,'N-A-X' : 0,'N-B-X' : 0,'P-N-X' : 0,'P-P-X' : 0,'P-A-X' : 0,'P-B-X' : 0,'A-N-X' : 0,'A-P-X' : 0,'A-A-X' : 0,'A-B-X' : 0,'B-N-X' : 0,'B-P-X' : 0,'B-B-X' : 0,'B-A-X' : 0,'ETC' : 0,};
-        this.dicOutputPolar = {'N-N-X' : 0,'N-P-X' : 0,'N-A-X' : 0,'N-B-X' : 0,'P-N-X' : 0,'P-P-X' : 0,'P-A-X' : 0,'P-B-X' : 0,'A-N-X' : 0,'A-P-X' : 0,'A-A-X' : 0,'A-B-X' : 0,'B-N-X' : 0,'B-P-X' : 0,'B-B-X' : 0,'B-A-X' : 0,'ETC' : 0,};
+        this.dicInputPolar = {'N-N-＊' : 0,'N-P-＊' : 0,'N-A-＊' : 0,'N-B-＊' : 0,'P-N-＊' : 0,'P-P-＊' : 0,'P-A-＊' : 0,'P-B-＊' : 0,'A-N-＊' : 0,'A-P-＊' : 0,'A-A-＊' : 0,'A-B-＊' : 0,'B-N-＊' : 0,'B-P-＊' : 0,'B-B-＊' : 0,'B-A-＊' : 0,'ETC' : 0,};
+        this.dicOutputPolar = {'N-N-＊' : 0,'N-P-＊' : 0,'N-A-＊' : 0,'N-B-＊' : 0,'P-N-＊' : 0,'P-P-＊' : 0,'P-A-＊' : 0,'P-B-＊' : 0,'A-N-＊' : 0,'A-P-＊' : 0,'A-A-＊' : 0,'A-B-＊' : 0,'B-N-＊' : 0,'B-P-＊' : 0,'B-B-＊' : 0,'B-A-＊' : 0,'ETC' : 0,};
         //Polarity feature	Polarity feature_S	Amino acid
         this.DIC_POLAR_FEATURE = {'A' : 'N','V' : 'N','L' : 'N','G' : 'N','I' : 'N','M' : 'N','W' : 'N','F' : 'N','P' : 'N','S' : 'P','C' : 'P','N' : 'P','Q' : 'P','T' : 'P','Y' : 'P','D' : 'A','E' : 'A','K' : 'B','R' : 'B','H' : 'B',};
         //Five amino acid properties 
@@ -117,43 +117,43 @@ class PolarityUtils {
             //input polar aa 건수 계산
             for (let i=0; i<this.inputPolarSeq.length -2; i++){
                 //기존 3자리조건에서 2자리로 변경, NN,PP에서 추가 ETC는 는 표에 count하기 위해 추가
-                if (this.inputPolarSeq.slice(i, i+2) == 'NN') this.dicInputPolar['N-N-X'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'NP') this.dicInputPolar['N-P-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'NA') this.dicInputPolar['N-A-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'NB') this.dicInputPolar['N-B-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'PN') this.dicInputPolar['P-N-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'PP') this.dicInputPolar['P-P-X'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'PA') this.dicInputPolar['P-A-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'PB') this.dicInputPolar['P-B-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'AA') this.dicInputPolar['A-A-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'AB') this.dicInputPolar['A-B-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'AN') this.dicInputPolar['A-N-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'AP') this.dicInputPolar['A-P-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'BN') this.dicInputPolar['B-N-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'BP') this.dicInputPolar['B-P-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'BA') this.dicInputPolar['B-A-X'] += 1, this.dicInputPolar['ETC'] += 1
-                else if (this.inputPolarSeq.slice(i, i+2) == 'BB') this.dicInputPolar['B-B-X'] += 1, this.dicInputPolar['ETC'] += 1
+                if (this.inputPolarSeq.slice(i, i+2) == 'NN') this.dicInputPolar['N-N-＊'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'NP') this.dicInputPolar['N-P-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'NA') this.dicInputPolar['N-A-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'NB') this.dicInputPolar['N-B-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'PN') this.dicInputPolar['P-N-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'PP') this.dicInputPolar['P-P-＊'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'PA') this.dicInputPolar['P-A-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'PB') this.dicInputPolar['P-B-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'AA') this.dicInputPolar['A-A-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'AB') this.dicInputPolar['A-B-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'AN') this.dicInputPolar['A-N-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'AP') this.dicInputPolar['A-P-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'BN') this.dicInputPolar['B-N-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'BP') this.dicInputPolar['B-P-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'BA') this.dicInputPolar['B-A-＊'] += 1, this.dicInputPolar['ETC'] += 1
+                else if (this.inputPolarSeq.slice(i, i+2) == 'BB') this.dicInputPolar['B-B-＊'] += 1, this.dicInputPolar['ETC'] += 1
                 else this.dicInputPolar['ETC'] += 1
             }
 
             //output polar aa 건수 계산
             for (let i=0; i<this.outputPolarSeq.length -2; i++){
-                if (this.outputPolarSeq.slice(i, i+2) == 'NN') this.dicOutputPolar['N-N-X'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'NP') this.dicOutputPolar['N-P-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'NA') this.dicOutputPolar['N-A-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'NB') this.dicOutputPolar['N-B-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'PN') this.dicOutputPolar['P-N-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'PP') this.dicOutputPolar['P-P-X'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'PA') this.dicOutputPolar['P-A-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'PB') this.dicOutputPolar['P-B-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'AA') this.dicOutputPolar['A-A-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'AB') this.dicOutputPolar['A-B-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'AN') this.dicOutputPolar['A-N-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'AP') this.dicOutputPolar['A-P-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'BN') this.dicOutputPolar['B-N-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'BP') this.dicOutputPolar['B-P-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'BA') this.dicOutputPolar['B-A-X'] += 1, this.dicOutputPolar['ETC'] += 1
-                else if (this.outputPolarSeq.slice(i, i+2) == 'BB') this.dicOutputPolar['B-B-X'] += 1, this.dicOutputPolar['ETC'] += 1
+                if (this.outputPolarSeq.slice(i, i+2) == 'NN') this.dicOutputPolar['N-N-＊'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'NP') this.dicOutputPolar['N-P-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'NA') this.dicOutputPolar['N-A-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'NB') this.dicOutputPolar['N-B-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'PN') this.dicOutputPolar['P-N-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'PP') this.dicOutputPolar['P-P-＊'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'PA') this.dicOutputPolar['P-A-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'PB') this.dicOutputPolar['P-B-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'AA') this.dicOutputPolar['A-A-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'AB') this.dicOutputPolar['A-B-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'AN') this.dicOutputPolar['A-N-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'AP') this.dicOutputPolar['A-P-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'BN') this.dicOutputPolar['B-N-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'BP') this.dicOutputPolar['B-P-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'BA') this.dicOutputPolar['B-A-＊'] += 1, this.dicOutputPolar['ETC'] += 1
+                else if (this.outputPolarSeq.slice(i, i+2) == 'BB') this.dicOutputPolar['B-B-＊'] += 1, this.dicOutputPolar['ETC'] += 1
                 else this.dicOutputPolar['ETC'] += 1
             }
 
