@@ -20,6 +20,80 @@ class PrdctnChart {
         this.seq6 = '';
         this.seq7 = '';
         this.seq8 = '';
+        this.apessDistConf = {
+                                chart: {
+                                    type:'spline',
+                                    zoomType: 'xy',
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                title: {
+                                    text: 'Amino acid Property Eigen Selection Score'
+                                },
+                            
+                                yAxis: {
+                                    title: {
+                                        text: 'Values'
+                                    }
+                                },
+                                xAxis: {
+                                    type: 'string',
+                                    max: 7,
+
+                                    //plotLines: [{
+                                        //color: '#FF0000', // Red
+                                        //width: 2,
+                                        //value: apess_sum // Position, you'll have to translate this to the values on your x axis
+                                    //}],
+
+                                    plotBands: [{
+                                        from: 1.5,
+                                        to: 8,
+                                        color: '#FFEFFF',
+                                        label: {
+                                            text: 'Infectivity',
+                                            style: {
+                                                color: '#999999',
+                                                fontSize: '40pt'
+                                                
+                                            },
+                                            y: 180
+                                        }
+                                    },
+                                    {
+                                        from: -0.1,
+                                        to: -2.0,
+                                        color: '#EFFFFF',
+                                        label: {
+                                            text: '',
+                                            style: {
+                                                color: '#999999'
+                                            },
+                                            y: 180
+                                        }
+                                    }], 
+                                    
+                                    reversed: false
+                                },
+                            
+                                plotOptions: {
+                                    series: {
+                                        marker: {
+                                            enabled: false,
+                                            symbol: 'circle',
+                                            radius: 2
+                                        },
+                                        label: {
+                                            connectorAllowed: false
+                                        },
+                                        pointStart: 0
+                                    }
+                                },
+                                series: [
+                                ],
+                            
+                            };
     }
 
     /**
@@ -1567,8 +1641,9 @@ class PrdctnChart {
     }
     
     drawApessDist(apess, targetId){
-        
         this.targetId = targetId ? targetId : this.targetId;
+
+        this.apessDistConf
 
         let apess_sum = apess.apess.reduce((sum, currVal) => {
             return sum + currVal;
@@ -1578,82 +1653,8 @@ class PrdctnChart {
         //apess_sum = apess_sum/10;
         apess_sum = apess_sum;
 
-        Highcharts.chart(this.targetId, {
-            chart: {
-                type:'spline',
-                zoomType: 'xy',
-            },
-            credits: {
-                enabled: false
-            },
-            title: {
-                text: 'Amino acid Property Eigen Selection Score'
-            },
-        
-            yAxis: {
-                title: {
-                    text: 'Values'
-                }
-            },
-            xAxis: {
-                type: 'string',
-                max: 4,
-
-                //plotLines: [{
-                    //color: '#FF0000', // Red
-                    //width: 2,
-                    //value: apess_sum // Position, you'll have to translate this to the values on your x axis
-                //}],
-
-                plotBands: [{
-                    from: 1.5,
-                    to: 8,
-                    color: '#FFEFFF',
-                    label: {
-                        text: 'Infectivity',
-                        style: {
-                            color: '#999999',
-                            fontSize: '40pt'
-                            
-                        },
-                        y: 180
-                    }
-                },
-                {
-                    from: -0.1,
-                    to: -1.0,
-                    color: '#EFFFFF',
-                    label: {
-                        text: '',
-                        style: {
-                            color: '#999999'
-                        },
-                        y: 180
-                    }
-                }], 
-                
-                reversed: false
-            },
-        
-            plotOptions: {
-                series: {
-                    marker: {
-                        enabled: false,
-                        symbol: 'circle',
-                        radius: 2
-                    },
-                    label: {
-                        connectorAllowed: false
-                    },
-                    pointStart: 0
-                }
-            },
-        
-            series: [{
-                label: false,
-                name: 'APESS samples',
-                data: apess.apess_dist
-            },
+        //apess 분포 그룹 1~4 추가 및 돌연변이 기본 위치 표시
+        this.apessDistConf.series.push(
             {
                 type: 'flags',
                 shape: 'flag',
@@ -1671,78 +1672,124 @@ class PrdctnChart {
                 showInLegend: false
             },
             {
-                type: 'flags',
-                name: 'Highcharts',
-                color: '#333333',
-                shape: 'circlepin',
-                y:-30,
-                data: [
-                    { x: -0.001312558, text: 'Alpha', title: 'Alpha' },
-                    { x: 1.949547146, text: 'BA1', title: 'BA1' },
-                    { x: 1.640392388, text: 'Delta', title: 'Delta' },
-                    { x: 2.153744188, text: 'BA.5', title: 'BA.5' },
-                ],
-                showInLegend: false
+                label: false,
+                name: 'G1',
+                data: apess.apess_dist.g1Coord
             },
             {
-                type: 'flags',
-                name: 'Highcharts',
-                color: '#333333',
-                shape: 'circlepin',
-                y:-60,
-                data: [
-                    { x: 2.052704741, text: 'BA2', title: 'BA2' },
-                ],
-                showInLegend: false
+                label: false,
+                name: 'G2',
+                data: apess.apess_dist.g2Coord
             },
             {
-                type: 'flags',
-                name: 'Highcharts',
-                color: '#333333',
-                shape: 'circlepin',
-                y:-90,
-                data: [
-                    { x: 2.153744188, text: 'BA.4', title: 'BA.4' },
-                    { x: 0.006397999,  text: 'Beta', title: 'Beta' },
-                ],
-                showInLegend: false
+                label: false,
+                name: 'G3',
+                data: apess.apess_dist.g3Coord
             },
             {
-                type: 'flags',
-                name: 'Highcharts',
-                color: '#333333',
-                shape: 'circlepin',
-                y:-120,
-                data: [
-                    { x: 1.966870792, text: 'XBB', title: 'XBB' },
-                ],
-                showInLegend: false
+                label: false,
+                name: 'G4',
+                data: apess.apess_dist.g4Coord
             },
-            {
-                type: 'flags',
-                name: 'Highcharts',
-                color: '#333333',
-                shape: 'circlepin',
-                y:-150,
-                data: [
-                    { x: 2.079979966,  text: 'BQ.1', title: 'BQ.1' },
-                ],
-                showInLegend: false
-            },
-            {
-                type: 'flags',
-                name: 'Highcharts',
-                color: '#333333',
-                shape: 'circlepin',
-                y:-180,
-                data: [
-                    { x: 1.926751413, text: 'BA.2.75', title: 'BA.2.75' },
-                ],
-                showInLegend: false
-            },
-        ],
+        );
         
-        });
+        if (apess_sum <= 3.2){
+            //apess 가 3.2보다 작을경우 변이 정보를 표시한다.
+            this.apessDistConf.series.push(
+                {
+                    type: 'flags',
+                    name: 'Highcharts',
+                    color: '#333333',
+                    shape: 'circlepin',
+                    y:-30,
+                    data: [
+                        { x: -0.001312558, text: 'Alpha', title: 'Alpha' },
+                        { x: 1.949547146, text: 'BA1', title: 'BA1' },
+                        { x: 1.640392388, text: 'Delta', title: 'Delta' },
+                        { x: 2.153744188, text: 'BA.5', title: 'BA.5' },
+                    ],
+                    showInLegend: false
+                },
+                {
+                    type: 'flags',
+                    name: 'Highcharts',
+                    color: '#333333',
+                    shape: 'circlepin',
+                    y:-60,
+                    data: [
+                        { x: 2.052704741, text: 'BA2', title: 'BA2' },
+                    ],
+                    showInLegend: false
+                },
+                {
+                    type: 'flags',
+                    name: 'Highcharts',
+                    color: '#333333',
+                    shape: 'circlepin',
+                    y:-90,
+                    data: [
+                        { x: 2.153744188, text: 'BA.4', title: 'BA.4' },
+                        { x: 0.006397999,  text: 'Beta', title: 'Beta' },
+                    ],
+                    showInLegend: false
+                },
+                {
+                    type: 'flags',
+                    name: 'Highcharts',
+                    color: '#333333',
+                    shape: 'circlepin',
+                    y:-120,
+                    data: [
+                        { x: 1.966870792, text: 'XBB', title: 'XBB' },
+                    ],
+                    showInLegend: false
+                },
+                {
+                    type: 'flags',
+                    name: 'Highcharts',
+                    color: '#333333',
+                    shape: 'circlepin',
+                    y:-150,
+                    data: [
+                        { x: 2.079979966,  text: 'BQ.1', title: 'BQ.1' },
+                    ],
+                    showInLegend: false
+                },
+                {
+                    type: 'flags',
+                    name: 'Highcharts',
+                    color: '#333333',
+                    shape: 'circlepin',
+                    y:-180,
+                    data: [
+                        { x: 1.926751413, text: 'BA.2.75', title: 'BA.2.75' },
+                    ],
+                    showInLegend: false
+                },                
+            );
+
+            //표시 범위를 조정한다.
+            this.apessDistConf.xAxis['min'] = -2;
+            this.apessDistConf.xAxis['max'] = 3.5;
+            
+        } else {
+            //apess 가 3.2초과일경우 그룹정보를 추가한다.
+            this.apessDistConf.series.push(
+                {
+                    label: false,
+                    name: 'G5',
+                    data: apess.apess_dist.g5Coord
+                },
+            );
+
+            //표시 범위를 조정한다.
+            this.apessDistConf.xAxis['min'] = 3.2;
+            this.apessDistConf.xAxis['max'] = 4.45;
+        }
+
+        Highcharts.chart(this.targetId, this.apessDistConf);
+
+        return apess_sum;
     }
     //Polarity features 그래프 추가
     drawPolarityInfo(polarity, targetId){

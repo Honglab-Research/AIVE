@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+from scipy.stats import norm
 import numpy as np
 import math
 import os
@@ -26,6 +27,9 @@ class ApessUtils():
     wdir = _aive_dir[3]
     #아웃풋 경로
     outputDir = _aive_dir[4]
+    
+    #apess 결과에 따른 그룹 및 확률
+    _apess_ref = 3.2
 
     #def `get_apess_result`(self, region, input_virus_seq, output_virus_seq, input_rna_seq):
     def get_apess_result(self, prdctn_info, input_rna_seq, output_rna_seq, pae_str, plddt_str):
@@ -117,78 +121,79 @@ class ApessUtils():
         #self.create_xy_chart(result_apess,'position', 'APESS', 'Amino acid Property Eigen Selection Score', region, 'APESS')
         
         #sars-cov-2 sublineage 분포 차트 그리기
-        #self.create_sublineage_dist_chart(result_apess, 'apess_dist')
+        #self.create_sublineage_dist_chart(result_apess, 'apess_dist')       
         
         #분포를 그리기 위해 데이터 조회
-        f1 = glob.glob(os.path.abspath(self.wdir + 'APESS_S_subtype_1186_5.txt'))[0]
-        subtype = pd.read_table(f1)
-        dic_apess_dist = {
-            -1.0:0,
-            -0.5:0,
-            0.0:0,
-            0.5:0,
-            1.0:0,
-            1.5:0,
-            2.0:0,
-            2.5:0,
-            3.0:0,
-            3.4:0,
-            4.0:0,
-            4.5:0,
-            5.0:0,
-            5.5:0,
-            6.0:0,
-            6.5:0,
-            7.0:0,
-            7.5:0,
-            8.0:0,
-        }
+        #20231027 최원종 연구원 요청에 의해 해당 기능 제거
+        # f1 = glob.glob(os.path.abspath(self.wdir + 'APESS_S_subtype_1186_5.txt'))[0]
+        # subtype = pd.read_table(f1)
+        # dic_apess_dist = {
+        #     -1.0:0,
+        #     -0.5:0,
+        #     0.0:0,
+        #     0.5:0,
+        #     1.0:0,
+        #     1.5:0,
+        #     2.0:0,
+        #     2.5:0,
+        #     3.0:0,
+        #     3.4:0,
+        #     4.0:0,
+        #     4.5:0,
+        #     5.0:0,
+        #     5.5:0,
+        #     6.0:0,
+        #     6.5:0,
+        #     7.0:0,
+        #     7.5:0,
+        #     8.0:0,
+        # }
         
-        #차트를 그리기 위해 -100백을곱한다.(정승필 박사 요청)
-        tmp_apess_dist = subtype.APESS * -100
-        for curr_apess in tmp_apess_dist:
-            if  curr_apess <= -0.1:
-                dic_apess_dist[-1.0] += 1
-            elif  curr_apess <= -0.5:
-                dic_apess_dist[-0.5] += 1
-            elif  curr_apess <= 0.0:
-                dic_apess_dist[0.0] += 1
-            elif  curr_apess <= 0.05:
-                dic_apess_dist[0.5] += 1
-            elif  curr_apess <= 1.0:
-                dic_apess_dist[1.0] += 1
-            elif  curr_apess <= 1.5:
-                dic_apess_dist[1.5] += 1
-            elif  curr_apess <= 2.0:
-                dic_apess_dist[2.0] += 1
-            elif  curr_apess <= 2.5:
-                dic_apess_dist[2.5] += 1
-            elif  curr_apess <= 3.0:
-                dic_apess_dist[3.0] += 1
-            elif  curr_apess <= 3.5:
-                dic_apess_dist[3.5] += 1
-            elif  curr_apess <= 4.0:
-                dic_apess_dist[4.0] += 1
-            elif  curr_apess <= 4.5:
-                dic_apess_dist[4.5] += 1
-            elif  curr_apess <= 5.0:
-                dic_apess_dist[5.0] += 1
-            elif  curr_apess <= 5.5:
-                dic_apess_dist[5.5] += 1
-            elif  curr_apess <= 6.0:
-                dic_apess_dist[6.0] += 1
-            elif  curr_apess <= 6.5:
-                dic_apess_dist[6.5] += 1
-            elif  curr_apess <= 7.0:
-                dic_apess_dist[7.0] += 1
-            elif  curr_apess <= 7.5:
-                dic_apess_dist[7.5] += 1
-            else:
-                dic_apess_dist[8.0] += 1
+        # #차트를 그리기 위해 -100백을곱한다.(정승필 박사 요청)
+        # tmp_apess_dist = subtype.APESS * -100
+        # for curr_apess in tmp_apess_dist:
+        #     if  curr_apess <= -0.1:
+        #         dic_apess_dist[-1.0] += 1
+        #     elif  curr_apess <= -0.5:
+        #         dic_apess_dist[-0.5] += 1
+        #     elif  curr_apess <= 0.0:
+        #         dic_apess_dist[0.0] += 1
+        #     elif  curr_apess <= 0.05:
+        #         dic_apess_dist[0.5] += 1
+        #     elif  curr_apess <= 1.0:
+        #         dic_apess_dist[1.0] += 1
+        #     elif  curr_apess <= 1.5:
+        #         dic_apess_dist[1.5] += 1
+        #     elif  curr_apess <= 2.0:
+        #         dic_apess_dist[2.0] += 1
+        #     elif  curr_apess <= 2.5:
+        #         dic_apess_dist[2.5] += 1
+        #     elif  curr_apess <= 3.0:
+        #         dic_apess_dist[3.0] += 1
+        #     elif  curr_apess <= 3.5:
+        #         dic_apess_dist[3.5] += 1
+        #     elif  curr_apess <= 4.0:
+        #         dic_apess_dist[4.0] += 1
+        #     elif  curr_apess <= 4.5:
+        #         dic_apess_dist[4.5] += 1
+        #     elif  curr_apess <= 5.0:
+        #         dic_apess_dist[5.0] += 1
+        #     elif  curr_apess <= 5.5:
+        #         dic_apess_dist[5.5] += 1
+        #     elif  curr_apess <= 6.0:
+        #         dic_apess_dist[6.0] += 1
+        #     elif  curr_apess <= 6.5:
+        #         dic_apess_dist[6.5] += 1
+        #     elif  curr_apess <= 7.0:
+        #         dic_apess_dist[7.0] += 1
+        #     elif  curr_apess <= 7.5:
+        #         dic_apess_dist[7.5] += 1
+        #     else:
+        #         dic_apess_dist[8.0] += 1
         
-        lst_apess = list(dic_apess_dist.items())
+        # lst_apess = list(dic_apess_dist.items())
         
-        lst_apess.sort(key=lambda x:x[0], reverse=True)
+        # lst_apess.sort(key=lambda x:x[0], reverse=True)
 
         list_aibc = [];
         for idx, val in enumerate(base_apess.loc['AIBC'].tolist()):
@@ -248,9 +253,28 @@ class ApessUtils():
                 
         list_result_apess = []
         list_wild_apess = []
+        apess_value = 0.0
+        
         for idx, val in enumerate(result_apess):
             list_result_apess.append(val*(10**4))
+            apess_value += val*(10**4)
             list_wild_apess.append(0)
+
+        if apess_value <= self._apess_ref:
+            apess_dist_file = glob.glob(os.path.abspath(self.wdir + 'apess_under_dist.json'))[0]
+            parameter_file = glob.glob(os.path.abspath(self.wdir + 'under_3.2.txt'))[0]
+        else:
+            apess_dist_file = glob.glob(os.path.abspath(self.wdir + 'apess_over_dist.json'))[0]
+            parameter_file = glob.glob(os.path.abspath(self.wdir + 'over_3.2.txt'))[0]
+
+        apess_json_file = open(apess_dist_file,'r')
+        lst_apess = json.load(apess_json_file)
+
+        parameter = pd.read_csv(parameter_file, sep='\t')
+
+        groups = parameter.to_dict('records')
+            
+        predicted_group, probability = self.predict_group(apess_value, groups)
 
         return {
             'scps': list_aibc,
@@ -264,7 +288,46 @@ class ApessUtils():
             'apess': list_result_apess,
             'apess_wild': list_wild_apess,
             'apess_dist': lst_apess,
+            'predicted_group': predicted_group,
+            'probability': probability,
         }
+
+    def calc_apess_group(self, apess_value):
+        
+        if apess_value <= self._apess_ref:
+            parameter_file = 'under_3.2.txt'
+        else:
+            parameter_file = 'over_3.2.txt'
+
+        parameter = pd.read_csv(parameter_file, sep='\t')
+
+        groups = parameter.to_dict('records')
+        
+    def predict_group(self, input_value, groups):
+        best_group = None
+        best_probability = -1
+        total_score = 0
+
+        for group in groups:
+            mean = group['mean']
+            variance = group['variance']
+            se = group['se']
+            weight = group['weight']
+
+            probability = weight * norm.pdf(input_value, loc=mean, scale=se)
+
+            if pd.isna(probability) == True:
+                probability = 0
+
+            total_score += probability
+
+            if probability > best_probability:
+                best_probability = probability
+                best_group = group['name']
+
+            hightest_probability = best_probability / total_score
+
+        return best_group, hightest_probability
 
     def calc_polarity(self, aa_seq):
         npolar=['A','V','L','G','I','M','W','F','P']

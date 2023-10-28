@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-lg">
         <a href="#!" class="modal-close">&times;</a>
         <h3>Select predictions for comparison</h3>
-        <div class="modal-content" style="height:auto !important;">
+        <div class="modal-content" style="height:auto !important;max-height:500px; overflow-y:scroll;">
             <form id="compareForm" name="comapreForm" method="GET" action="{% url 'aive:prdctn_result_compare' %}">
                 <input type="hidden" id="oriPrdctnInfoSeq" name="oriPrdctnInfoSeq" />
                 <input type="hidden" id="comparePrdctnInfoSeq" name="comparePrdctnInfoSeq" />

@@ -104,7 +104,14 @@
                         
                         //위치변경
                         _apessChart.drawApess(apess,'divApess');
-                        _apessChart.drawApessDist(apess, 'divApessDist');
+                        let apessVal = _apessChart.drawApessDist(apess, 'divApessDist');
+
+                        //apess그룹 및 유사도 표시
+                        $('#apessVal').text(apessVal.toFixed(4));
+                        $('#apessProbblty').text(apess.apess.probability);
+                        $('#apessGrp').text(apess.predicted_group);
+
+
 
 
                         polarityUtils.drawVirusInfo().then(result => {
@@ -360,6 +367,11 @@
                             </div>
                             <div class="ICn_area" style="width:100%;">
                                 <div id="divApessDist" style="width:100%;"></div>
+                            </div>
+                            <div class="tutorial_expl01" style="margin:0px;">
+                                <ol>
+                                    <li> The input APESS value <b id="apessVal">2.1</b> has the highest probability (p = <b id="apessProbblty">0.9952</b>) to belong to the group <b id="apessGrp">G1</b></li>
+                                </ol> 
                             </div>
                         </li>
                         <!-- Alignment -->
