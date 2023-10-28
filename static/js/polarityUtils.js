@@ -67,7 +67,7 @@ class PolarityUtils {
      */
      makePolarityInfo(){
         for (let key in this.dicInputPolar){
-            if(key == "P-P-X" || key == "N-N-X"  || key == "ETC" ){
+            if(key == "P-P-＊" || key == "N-N-＊"  || key == "ETC" ){
             $(`#${this.targetId}Tbl > tbody`)
             .append(
                 $('<tr>')
