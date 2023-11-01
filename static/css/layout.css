@@ -3077,6 +3077,7 @@ background-color: #215795;  /*나 추가*/
     border: 1px solid gray;
 	text-align: center;
     }
+
 .tutorial_expl01  { width: 100%; margin:10px;}
 .tutorial_expl01 dd{ color: #6e7174;font-size: 15px; margin-top:20px; word-break: keep-all;}
 .tutorial_expl01 dd{ color: #6e7174;font-size: 15px; margin-top:20px; word-break: keep-all;}
@@ -3175,6 +3176,33 @@ background-color: #215795;  /*나 추가*/
     color: #4a79c6;
     font-weight: 600;
 	margin-bottom: 10px;}
+
+.tutorial_img03{ 
+	width:100%; 
+	background-color: #fff;
+	border: 1px solid gray;
+	text-align: center;
+	}
+
+.tutorial_expl03  { width: 100%; margin:10px; padding-bottom: 30px;}
+.tutorial_expl03 dd{ color: #6e7174;font-size: 15px; word-break: keep-all;}
+.tutorial_expl03 dd{ color: #6e7174;font-size: 15px; word-break: keep-all;}
+.tutorial_expl03 dd{ color: #6e7174;font-size: 15px; word-break: keep-all;}
+.tutorial_expl03 dt{ color: #111111;font-size: 15px; font-weight:500;  word-break: keep-all;}
+.tutorial_expl03 dt p{ padding-bottom:5px;}
+.tutorial_expl03 dt a{ color: blue;}
+.tutorial_expl03 dt a:hover{ color: red;}
+.tutorial_expl03 ol { width: 100%; margin:10px;}
+.tutorial_expl03 li { 
+	list-style-type: decimal;
+	color: #111111;
+	font-size: 16px;
+	font-weight:400;
+	word-break: keep-all;
+}
+.tutorial_expl03 li p{ padding-bottom:5px;}
+.tutorial_expl03 li a{ color: blue;}
+.tutorial_expl03 li a:hover{ color: red;}
 
 .tutorial_Localimg{ 
 	width:100%; margin-bottom:30px; margin-top: 20px;
