@@ -302,6 +302,7 @@
 							domain_nm : $('#domain_nm').val(),
 							pae : $('#pae').val(),
 							plddt : $('#plddt').val(),
+							view_type : 'result_viewer',
 						};
 	
 						CommonUtils.ajaxJsonDef('/get_apess_result',param,'POST').then(data => {

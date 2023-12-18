@@ -1796,8 +1796,8 @@ class PrdctnChart {
         this.targetId = targetId ? targetId : this.targetId;
 
         var polarityTmpX = Object.keys(polarity.dicInputPolar);
-        var inputPolarityTmpY = Object.values(polarity.dicInputPolar);
-        var outputPolarityTmpY = Object.values(polarity.dicOutputPolar);
+        var inputPolarityTmpY = Object.values(polarity.dicOutputPolar);
+        var outputPolarityTmpY = Object.values(polarity.dicInputPolar);
 
         polarityTmpX.pop();
         inputPolarityTmpY.pop();

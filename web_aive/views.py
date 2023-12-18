@@ -317,6 +317,8 @@ def get_apess_result(request):
         prdctn_info.trget_seq_rgin_st_lc = request.POST.get('trget_seq_rgin_st_lc')
         prdctn_info.trget_seq_rgin_end_lc = request.POST.get('trget_seq_rgin_end_lc')
         
+        view_type = request.POST.get('view_type')
+        
         #input_rnq_seq를 조회한다.
         input_virus_info = VirusSeqInfo.objects.filter(virus_cd = prdctn_info.trget_virus, virus_mut_nm = 'WH', domain_nm = prdctn_info.domain_nm)
         input_rna_seq = input_virus_info[0].rna_seq
@@ -325,17 +327,19 @@ def get_apess_result(request):
         output_virus_info = VirusSeqInfo.objects.filter(virus_cd = prdctn_info.trget_virus, virus_mut_nm = prdctn_info.virus_mut_nm, domain_nm = prdctn_info.domain_nm)
         output_rna_seq = output_virus_info[0].rna_seq
         
-        #WH 바이러스 일때는 사용자가 입력한 ouput rna seq 변이를 반영하도록 한다.
-        if prdctn_info.virus_mut_nm == 'WH':
-            arr_output_rna_seq = prdctn_info.output_virus_rna_seq_1.split(',')
-            tmp_rna_seq = ''
-            for idx, rna_seq in enumerate(arr_output_rna_seq):
-                if rna_seq != '':
-                    tmp_rna_seq += rna_seq
-                else:
-                    tmp_rna_seq += output_rna_seq[(idx*3): (idx*3) + 3]
-                
-            output_rna_seq = tmp_rna_seq
+        #result_viewer 기능에서 사용 시 사용자 입력값이 없으므로 DB 값을 사용해서 계산하돠록 수정
+        if view_type != 'result_viewer':
+            #WH 바이러스 일때는 사용자가 입력한 ouput rna seq 변이를 반영하도록 한다.
+            if prdctn_info.virus_mut_nm == 'WH':
+                arr_output_rna_seq = prdctn_info.output_virus_rna_seq_1.split(',')
+                tmp_rna_seq = ''
+                for idx, rna_seq in enumerate(arr_output_rna_seq):
+                    if rna_seq != '':
+                        tmp_rna_seq += rna_seq
+                    else:
+                        tmp_rna_seq += output_rna_seq[(idx*3): (idx*3) + 3]
+                    
+                output_rna_seq = tmp_rna_seq
 
         pae = request.POST.get('pae')
         plddt = request.POST.get('plddt')
