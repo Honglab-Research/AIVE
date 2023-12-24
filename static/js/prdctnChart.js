@@ -1740,7 +1740,7 @@ class PrdctnChart {
                     shape: 'circlepin',
                     y:-120,
                     data: [
-                        { x: 1.966870792, text: 'XBB', title: 'XBB' },
+                        { x: 1.982796105, text: 'XBB', title: 'XBB' },
                     ],
                     showInLegend: false
                 },
