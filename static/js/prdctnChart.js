@@ -34,7 +34,7 @@ class PrdctnChart {
                             
                                 yAxis: {
                                     title: {
-                                        text: 'Values'
+                                        text: 'Density'
                                     }
                                 },
                                 xAxis: {
